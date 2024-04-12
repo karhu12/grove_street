@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+    {% load static %}
+    <head>
+        <meta charset="utf-8" />
+        <title>{% block title %}Grove street - Home{% endblock %}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    </head>
+    <body>
+        <div id="header">
+            {% block header %}
+            <a href="{% url "home" %}">
+                <h1>Grove street - <span class="light-green">Home</span></h1>
+            </a>
+            {% endblock %}
+        </div>
+        <div id="navbar">{% block navbar %}{% endblock %}</div>
+
+        <div id="content">
+            {% block content %}
+            <p>Content</p>
+            {% endblock %}
+        </div>
+        <div id="footer">
+            {% block footer %}
+            <small>Copyright &copy; 2024 Riku Kaipainen. All Rights Reserved.</small>
+            {% endblock %}
+        </div>
+    </body>
+</html>
