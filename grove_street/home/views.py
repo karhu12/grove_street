@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 
 def home(request: HttpRequest):
-    return HttpResponse("Grove street, Home.")
+    return render(request, "home/index.html")

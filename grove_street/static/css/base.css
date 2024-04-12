@@ -1,0 +1,72 @@
+:root {
+    /* CSS HEX */
+    --black-olive: #292e1eff;
+    --light-green: #9ee493ff;
+    --nyanza: #daf7dcff;
+    --ash-gray: #abc8c0ff;
+    --chinese-violet: #70566dff;
+
+    /* CSS HSL */
+    --black-olive: rgb(29, 32, 21);
+    --light-green: hsla(112, 60%, 74%, 1);
+    --nyanza: hsla(124, 64%, 91%, 1);
+    --ash-gray: hsla(163, 21%, 73%, 1);
+    --chinese-violet: hsla(307, 13%, 39%, 1);
+}
+
+.black-olive {
+    color: var(--black-olive)
+}
+
+.light-green {
+    color: var(--light-green)
+}
+
+.nyanza {
+    color: var(--nyanza)
+}
+
+.ash-gray {
+    color: var(--ash-gray)
+}
+
+.chinese-violet {
+    color: var(--chinese-violet)
+}
+
+body {
+    min-height: 100vh;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    font-family: "Roboto Slab", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#content {
+    margin: 8px;
+}
+
+#header {
+    background-color: var(--black-olive);
+    color: white;
+    padding: 10px;
+}
+
+#footer {
+    background-color: var(--black-olive);
+    color: white;
+    padding: 10px;
+    margin-top: auto;
+}
+
+h1 {
+    display: inline;
+}
+
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
