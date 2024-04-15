@@ -12,13 +12,14 @@
     <body>
         <div id="header">
             {% block header %}
-            <a href="{% url "home" %}">
-                <h1>Grove street - <span class="light-green">Home</span></h1>
-            </a>
+            <h1><a href="{% url "home" %}">Grove street - <span class="light-green">Home</span></a></h1>
+            <nav>
+                <a href="">About me</a>
+                <a href="">My background</a>
+                <a href="">Miscellaneous</a>
+            </nav>
             {% endblock %}
         </div>
-        <div id="navbar">{% block navbar %}{% endblock %}</div>
-
         <div id="content">
             {% block content %}
             <p>Content</p>
