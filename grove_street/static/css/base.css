@@ -1,5 +1,6 @@
 :root {
     /* CSS HEX */
+    --light-black-olive: rgb(79, 90, 58);
     --black-olive: #292e1eff;
     --light-green: #9ee493ff;
     --nyanza: #daf7dcff;
@@ -12,6 +13,10 @@
     --nyanza: hsla(124, 64%, 91%, 1);
     --ash-gray: hsla(163, 21%, 73%, 1);
     --chinese-violet: hsla(307, 13%, 39%, 1);
+}
+
+.light-black-olive {
+    color: var(--light-black-olive)
 }
 
 .black-olive {
@@ -48,7 +53,7 @@ body {
 #content {
     margin-left: auto;
     margin-right: auto;
-    max-width: 1000px;
+    max-width: 1200px;
 }
 
 #header {
@@ -57,16 +62,34 @@ body {
     padding: 10px;
 }
 
-#header h1 {
-    display: inline-block;
+#header-content {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
-#header nav {
-    display: inline-block;
+#navbar {
+    background-color: var(--light-black-olive);
+    color: white;
+    display: flex;
+    padding: 10px;
+}
+
+#navbar-content {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    align-self: center;
+}
+
+#navbar nav {
+    display: inline;
     padding: 8px
 }
 
-#header a {
+#navbar a {
     margin: 0 8px;
 }
 
