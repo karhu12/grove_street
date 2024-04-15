@@ -12,12 +12,20 @@
     <body>
         <div id="header">
             {% block header %}
-            <h1><a href="{% url "home" %}">Grove street - <span class="light-green">Home</span></a></h1>
-            <nav>
-                <a href="">About me</a>
-                <a href="">My background</a>
-                <a href="">Miscellaneous</a>
-            </nav>
+            <div id="header-content">
+                <h1><a href="{% url "home" %}">Grove street - <span class="light-green">Home</span></a></h1>
+            </div>
+            {% endblock %}
+        </div>
+        <div id="navbar">
+            {% block navbar %}
+            <div id="navbar-content">
+                <nav>
+                    <a href="{% url "about" %}">About me</a>
+                    <a href="{% url "background" %}">My background</a>
+                    <a href="{% url "miscellaneous" %}">Miscellaneous</a>
+                </nav>
+            </div>
             {% endblock %}
         </div>
         <div id="content">
