@@ -1,3 +1,5 @@
+/* Colors */
+
 :root {
     /* CSS HEX */
     --light-black-olive: rgb(79, 90, 58);
@@ -39,6 +41,8 @@
     color: var(--chinese-violet)
 }
 
+/* Elements*/
+
 body {
     min-height: 100vh;
     margin: 0px;
@@ -49,6 +53,7 @@ body {
     font-weight: 400;
     font-style: normal;
 }
+
 
 #content {
     margin-left: auto;
@@ -113,4 +118,9 @@ a {
 
 a:hover {
     color: var(--nyanza)
+}
+
+.tech-icon {
+    height: 50px;
+    margin: 0 8px;
 }
