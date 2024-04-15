@@ -12,22 +12,33 @@
     <body>
         <div id="header">
             {% block header %}
-            <a href="{% url "home" %}">
-                <h1>Grove street - <span class="light-green">Home</span></h1>
-            </a>
+            <div id="header-content">
+                <h1><a href="{% url "home" %}">Grove street - <span class="light-green">Home</span></a></h1>
+            </div>
             {% endblock %}
         </div>
-        <div id="navbar">{% block navbar %}{% endblock %}</div>
-
+        <div id="navbar">
+            {% block navbar %}
+            <div id="navbar-content">
+                <nav>
+                    <a href="{% url "about" %}">About me</a>
+                    <a href="{% url "background" %}">My background</a>
+                    <a href="{% url "miscellaneous" %}">Miscellaneous</a>
+                </nav>
+            </div>
+            {% endblock %}
+        </div>
         <div id="content">
             {% block content %}
             <p>Content</p>
             {% endblock %}
         </div>
         <div id="footer">
-            {% block footer %}
-            <small>Copyright &copy; 2024 Riku Kaipainen. All Rights Reserved.</small>
-            {% endblock %}
+            <div id="footer-content">
+                {% block footer %}
+                <small>Copyright &copy; 2024 <span class="light-green">Riku Kaipainen</span>. All Rights Reserved.</small>
+                {% endblock %}
+            </div>
         </div>
     </body>
 </html>
