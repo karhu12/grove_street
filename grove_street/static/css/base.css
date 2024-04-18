@@ -124,3 +124,9 @@ a:hover {
     height: 50px;
     margin: 0 8px;
 }
+
+.blog-post-container {
+    padding: 5px 10px;
+    background: var(--chinese-violet);
+    border-radius: 10px;
+}
