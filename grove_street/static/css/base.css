@@ -2,43 +2,26 @@
 
 :root {
     /* CSS HEX */
-    --light-black-olive: rgb(79, 90, 58);
-    --black-olive: #292e1eff;
-    --light-green: #9ee493ff;
-    --nyanza: #daf7dcff;
-    --ash-gray: #abc8c0ff;
-    --chinese-violet: #70566dff;
-
-    /* CSS HSL */
-    --black-olive: rgb(29, 32, 21);
-    --light-green: hsla(112, 60%, 74%, 1);
-    --nyanza: hsla(124, 64%, 91%, 1);
-    --ash-gray: hsla(163, 21%, 73%, 1);
-    --chinese-violet: hsla(307, 13%, 39%, 1);
+    --primary-color:  rgb(9, 46, 32);
+    --secondary-color: rgb(17, 86, 60);
+    --accent-1: #9ee493ff;
+    --accent-2: #daf7dcff;
 }
 
-.light-black-olive {
-    color: var(--light-black-olive)
+.primary-color {
+    color: var(--primary-color)
 }
 
-.black-olive {
-    color: var(--black-olive)
+.secondary-color {
+    color: var(--secondary-color)
 }
 
-.light-green {
-    color: var(--light-green)
+.accent-1 {
+    color: var(--accent-1)
 }
 
-.nyanza {
-    color: var(--nyanza)
-}
-
-.ash-gray {
-    color: var(--ash-gray)
-}
-
-.chinese-violet {
-    color: var(--chinese-violet)
+.accent-2 {
+    color: var(--accent-2)
 }
 
 /* Elements*/
@@ -62,7 +45,7 @@ body {
 }
 
 #header {
-    background-color: var(--black-olive);
+    background-color: var(--primary-color);
     color: white;
     padding: 10px;
 }
@@ -75,7 +58,7 @@ body {
 }
 
 #navbar {
-    background-color: var(--light-black-olive);
+    background-color: var(--secondary-color);
     color: white;
     display: flex;
     padding: 10px;
@@ -99,7 +82,7 @@ body {
 }
 
 #footer {
-    background-color: var(--black-olive);
+    background-color: var(--primary-color);
     color: white;
     padding: 10px;
     margin-top: auto;
@@ -117,7 +100,7 @@ a {
 }
 
 a:hover {
-    color: var(--nyanza)
+    color: var(--accent-2)
 }
 
 .tech-icon {
@@ -125,8 +108,17 @@ a:hover {
     margin: 0 8px;
 }
 
-.blog-post-container {
+.blog-post-preview-container {
     padding: 5px 10px;
-    background: var(--chinese-violet);
+    background: var(--secondary-color);
+    color: white;
     border-radius: 10px;
+}
+
+.blog-post-preview-container:hover {
+    background-color: var(--primary-color);
+}
+
+.blog-post-preview-container h2, p {
+    margin: 4px
 }

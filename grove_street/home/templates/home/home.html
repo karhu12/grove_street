@@ -13,14 +13,16 @@
 <img class="tech-icon" src="{% static 'img/css3-01-svgrepo-com.svg' %}" alt="CSS3"/>
 <img class="tech-icon" src="{% static 'img/postgresql-horizontal.svg' %}" alt="Postgre SQL"/>
 <hr>
-<h2>Blog</h2>
+<h2>Recent blog posts</h2>
 {% if latest_posts %}
     {% for post in latest_posts %}
-    <div class="blog-post-container">
-        <h3>{{ post.title }}</h3>
-        <label>{{ post.published_date }}</label>
-        <p>{{ post.content }}</p>
-    </div>
+    <a href="">
+        <div class="blog-post-preview-container">
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.published_date }}</p>
+            <p>Author: {{ post.author }}</p>
+        </div>
+    </a>
     {% endfor %}
 {% else %}
 <p>No blog posts available!</p>
