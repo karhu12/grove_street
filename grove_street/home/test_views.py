@@ -1,4 +1,5 @@
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -60,3 +61,52 @@ class HomeViewTestCase(TestCase):
         self.assertEqual(len(response.context["latest_posts"]), 1)
         self.assertEqual(response.context["latest_posts"][0], blog_post)
         self.assertContains(response, "<div class=\"blog-post-container\">", count=1)
+
+    def test_2_blog_posts_shown(self):
+        """Test that two blog posts are shown when database contains them."""
+        user = create_test_user()
+        blog_posts = []
+        for _ in range(2):
+            blog_posts.append(create_blog_post(user))
+        response = self.client.get("")
+        self.assertEqual(len(response.context["latest_posts"]), 2)
+        for i in range(2):
+            self.assertEqual(response.context["latest_posts"][i], blog_posts[i])
+        self.assertContains(response, "<div class=\"blog-post-container\">", count=2)
+
+    def test_3_blog_posts_shown(self):
+        """Test that three blog posts are shown when database contains them."""
+        user = create_test_user()
+        blog_posts = []
+        for _ in range(3):
+            blog_posts.append(create_blog_post(user))
+        response = self.client.get("")
+        self.assertEqual(len(response.context["latest_posts"]), 3)
+        for i in range(3):
+            self.assertEqual(response.context["latest_posts"][i], blog_posts[i])
+        self.assertContains(response, "<div class=\"blog-post-container\">", count=3)
+
+    def test_max_3_blog_posts_shown_in_correct_order(self):
+        """Test that maximum of three blog posts are shown in correct order
+        when database contains more than three.
+        """
+        user = create_test_user()
+        blog_posts = []
+        current_datetime = now()
+        for i in range(4):
+            # Make sure all blog posts have different published date (by 1 microsecond)
+            blog_post = create_blog_post(
+                user,
+                published_date=(
+                    current_datetime +
+                    timedelta(microseconds=current_datetime.microsecond + i)
+                )
+            )
+            blog_posts.append(blog_post)
+
+        blog_posts.sort(key=lambda item: item.published_date, reverse=True)
+        response = self.client.get("")
+        self.assertEqual(len(response.context["latest_posts"]), 3)
+        for i in range(3):
+            self.assertEqual(response.context["latest_posts"][i], blog_posts[i])
+        self.assertContains(response, "<div class=\"blog-post-container\">", count=3)
