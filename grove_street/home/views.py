@@ -12,11 +12,10 @@ def home(request: HttpRequest):
         latest_posts = None
     return render(request, "home/home.html", {"latest_posts": latest_posts})
 
-def about_me(request: HttpRequest):
+def about(request: HttpRequest):
     return render(request, "home/about.html")
 
-def my_background(request: HttpRequest):
-    return render(request, "home/background.html")
+def blog(request: HttpRequest):
+    return render(request, "home/blog.html")
 
-def miscellaneous(request: HttpRequest):
-    return render(request, "home/miscellaneous.html")
+
