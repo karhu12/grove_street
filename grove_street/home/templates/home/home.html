@@ -5,10 +5,24 @@
 <h1>Welcome!</h1>
 <p>Welcome to my website! This website is meant to provide some basic information about me and my past experiences in the software development field.</p>
 <p>This webite also stands as a testing ground for me to learn new technologies and work on personal projects.</p>
+<hr>
 <h2>About this website</h2>
 <p>This website has been created using the following technologies:</p>
 <img class="tech-icon" src="{% static 'img/django.svg' %}" alt="Django"/>
 <img class="tech-icon" src="{% static 'img/html5-01-svgrepo-com.svg' %}" alt="HTML5"/>
 <img class="tech-icon" src="{% static 'img/css3-01-svgrepo-com.svg' %}" alt="CSS3"/>
 <img class="tech-icon" src="{% static 'img/postgresql-horizontal.svg' %}" alt="Postgre SQL"/>
+<hr>
+<h2>Blog</h2>
+{% if latest_posts %}
+    {% for post in latest_posts %}
+    <div class="blog-post-container">
+        <h3>{{ post.title }}</h3>
+        <label>{{ post.published_date }}</label>
+        <p>{{ post.content }}</p>
+    </div>
+    {% endfor %}
+{% else %}
+<p>No blog posts available!</p>
+{% endif %}
 {% endblock %}
