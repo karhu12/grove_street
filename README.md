@@ -67,7 +67,7 @@ You can setup debugging with visual studio by copying this configuration to `/.v
             "request": "launch",
             "program": "manage.py",
             "cwd": "${workspaceFolder}\\grove_street",
-            "args": ["test"],
+            "args": ["test", "--noinput"],
             "django": true,
             "justMyCode": true
           }

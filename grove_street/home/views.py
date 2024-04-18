@@ -7,7 +7,7 @@ from home.models import BlogPost
 
 def home(request: HttpRequest):
     try:
-        latest_posts = BlogPost.objects.order_by("published_date")[:3]
+        latest_posts = BlogPost.objects.order_by("-published_date")[:3]
     except BlogPost.DoesNotExist:
         latest_posts = None
     return render(request, "home/home.html", {"latest_posts": latest_posts})
