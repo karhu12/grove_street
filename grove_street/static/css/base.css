@@ -5,7 +5,7 @@
     --primary-color:  rgb(9, 46, 32);
     --secondary-color: rgb(17, 86, 60);
     --accent-1: #9ee493ff;
-    --accent-2: #daf7dcff;
+    --accent-2: rgb(166, 208, 169);
 }
 
 .primary-color {
@@ -42,6 +42,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     max-width: 1200px;
+    width: 100%;
 }
 
 #header {
@@ -100,12 +101,16 @@ a {
 }
 
 a:hover {
-    color: var(--accent-2)
+    color: var(--accent-1)
 }
 
 .tech-icon {
     height: 50px;
     margin: 0 8px;
+}
+
+.blog-posts-preview-container {
+    margin: 10px 0px;
 }
 
 .blog-post-preview-container {
@@ -121,4 +126,19 @@ a:hover {
 
 .blog-post-preview-container h2, p {
     margin: 4px
+}
+
+.vertical-line {
+    border-left: 2px solid var(--primary-color);
+    height: 100%;
+    display: inline;
+    margin: 0 8px;
+}
+
+.page-number {
+    font-weight: bold;
+}
+
+.no-blog-posts {
+    margin-bottom: 20px;
 }
