@@ -38,6 +38,8 @@ def create_blog_post(
         content: Content of the blog post.
     Returns:
         Created blog post.
+    Raises:
+        IntegrityError: Saving blog post failed.
     """
     options = {}
     for option, option_name in [
@@ -49,6 +51,6 @@ def create_blog_post(
         if option:
             options[option_name] = option
 
-    blog_post = BlogPost.objects.create(**options)
+    blog_post = BlogPost(**options)
     blog_post.save()
     return blog_post
