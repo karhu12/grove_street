@@ -3,6 +3,8 @@ Welcome to Grove Street, Home.
 
 ## Database setup (Windows)
 
+* Install PostgreSQL (https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+* Create a new database and an user for it using the `psql` shell.
 * Create a file called `.env` to `/grove_street/`.
 * Modify the contents to be as follows:
 
@@ -23,7 +25,6 @@ You should be able to use the database now.
 ## Running server
 
 You can run the server by using the manager.py inside the grove_street folder `python manage.py runserver`.
-
 
 ## Running tests
 
