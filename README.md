@@ -6,7 +6,7 @@ Welcome to Grove Street, Home.
 * Install PostgreSQL (https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 * Create a new database and an user for it using the `psql` shell.
 * Create a file called `.env` to `/grove_street/`.
-* Modify the contents to be as follows:
+* Modify the contents to match with the created database:
 
 ```
 DEBUG=True (use False for production)

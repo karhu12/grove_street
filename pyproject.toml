@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools >= 69.5.1", "build >= 1.2.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "grove_street"
+version = "0.0.1"
+dependencies = [
+    "Django >= 5.0.4",
+    "django-dotenv >= 1.4.2",
+    "psycopg >= 3.1.18",
+    "psycopg-binary >= 3.1.18",
+]
+requires-python = ">=3.12"
+authors = [{ name = "Riku Kaipainen", email = "riku.kaipainen@gmail.com" }]
+maintainers = [{ name = "Riku Kaipainen", email = "riku.kaipainen@gmail.com" }]
+description = "Portfolio website created for learning django."
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Website",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+]
+keywords = ["Portfolio website", "Django", "PostgreSQL", "Blog", "Curriculum Vitae"]
+
+[project.urls]
+Homepage = "https://github.com/karhu12/grove_street"
+Issues = "https://github.com/karhu12/grove_street/issues"
