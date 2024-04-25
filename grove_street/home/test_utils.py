@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 from django.contrib.auth import get_user_model
@@ -18,7 +18,7 @@ def create_test_user(username: str = "TEST_USER", password: str = "TEST_PW") -> 
         Created user.
     """
     user_model = get_user_model()
-    user = user_model.objects.create_user(username="test_user", password="1234")
+    user = user_model.objects.create_user(username=username, password=password)
     user.save()
     return user
 
@@ -54,3 +54,28 @@ def create_blog_post(
     blog_post = BlogPost(**options)
     blog_post.save()
     return blog_post
+
+def create_blog_posts_with_differing_published_date(count: int) -> list[BlogPost]:
+    """Creates blog posts with each of the blog post having different published date.
+
+    Args:
+        count: How many blog posts to create.
+    Returns:
+        list of created blog posts.
+    """
+    blog_posts = []
+    user = create_test_user()
+    current_datetime = now()
+    for i in range(count):
+        # Make sure all blog posts have different published date (by 1 microsecond)
+        blog_post = create_blog_post(
+            user,
+            published_date=(
+                current_datetime
+                + timedelta(microseconds=current_datetime.microsecond + i)
+            ),
+        )
+        blog_posts.append(blog_post)
+
+    blog_posts.sort(key=lambda item: item.published_date, reverse=True)
+    return blog_posts
