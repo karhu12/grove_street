@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Blog posts</h1>
+{% if latest_posts %}
+    <div class="blog-posts-preview-container">
+        {% for post in latest_posts %}
+        <a href="{% url 'blog_post' post.id %}">
+            <div class="blog-post-preview-container">
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.published_date }}</p>
+                <p>{{ post.author }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+{% else %}
+<p class="no-blog-posts">No blog posts available!</p>
+{% endif %}
+{% if page > 1 %}
+<a href="{% url "blog" previous_page %}">Previous page</a>
+<div class="vertical-line"></div>
+{% endif %}
+<span class="page-number">Page {{ page }}</span>
+<div class="vertical-line"></div>
+<a href="{% url 'blog' next_page %}">Next page</a>
+{% endblock %}
