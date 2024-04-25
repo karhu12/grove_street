@@ -3,6 +3,8 @@
 
 {% block content %}
 <h1>{{ blog_post.title }}</h1>
+<hr>
 <p>{{ blog_post.content }}</p>
 <h5>{{ blog_post.published_date }}</h5>
+<h5>{{ blog_post.author }}</h5>
 {% endblock%}
