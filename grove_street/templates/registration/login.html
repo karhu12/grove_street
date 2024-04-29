@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Sign in to your account</h1>
+
+{% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+        <p>Your account doesn't have access to this page. To proceed,
+        please login with an account that has access.</p>
+    {% else %}
+        <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+<!--
+<form action="" method="post" class="login-form table">
+    {% csrf_token %}
+    <div class="table-row">
+        <label for="username">Username</label>
+        <input type="text" name="username" placeholder="Enter your username" required/>
+    </div>
+    <div class="table-row">
+        <label for="password">Password</label>
+        <input type="password" name="password" placeholder="Enter your password" required/>
+    </div>
+    <div class="table-row">
+        <input type="submit" value="login"/>
+        <input type="hidden" name="next" value="{{ next }}">
+    </div>
+</form>
+-->
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>{{ form.username.label_tag }}</td>
+            <td>{{ form.username }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.password.label_tag }}</td>
+            <td>{{ form.password }}</td>
+        </tr>
+    </table>
+    <input type="submit" value="login">
+    <input type="hidden" name="next" value="{{ next }}">
+</form>
+<hr>
+<h2>Don't have an account yet? Start by clicking from the link below.</h2>
+<a href="">Create new account</a>
+{% endblock %}

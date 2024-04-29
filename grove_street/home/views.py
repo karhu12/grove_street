@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest, Http404
+from django.views import View
 
 from home.models import get_latest_blog_posts, BlogPost
 from home.constants import MAX_BLOG_POSTS_ON_HOME_PAGE, MAX_BLOG_POSTS_ON_BLOG_PAGE
@@ -38,10 +39,9 @@ def blog(request: HttpRequest, page: int = 1):
     )
 
 def blog_post(request: HttpRequest, id: int):
-    """endpoint for checking an individual blog post."""
+    """Endpoint for checking an individual blog post."""
     blog_post = get_object_or_404(BlogPost, pk=id)
     return render(request, "home/blog_post.html", {"blog_post": blog_post})
-
 
 # POST
 

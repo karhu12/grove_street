@@ -142,3 +142,31 @@ a:hover {
 .no-blog-posts {
     margin-bottom: 20px;
 }
+
+.log-in-container {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: block;
+}
+
+.log-in-form {
+    margin: 16px;
+}
+
+.table {
+    display: table;
+}
+
+.table-row {
+    display: table-row;
+}
+
+label, input {
+    display: table-cell;
+    margin-bottom: 10px;
+}
+
+label {
+    padding-right: 10px;
+}
