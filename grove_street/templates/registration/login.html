@@ -16,23 +16,7 @@
         <p>Please login to see this page.</p>
     {% endif %}
 {% endif %}
-<!--
-<form action="" method="post" class="login-form table">
-    {% csrf_token %}
-    <div class="table-row">
-        <label for="username">Username</label>
-        <input type="text" name="username" placeholder="Enter your username" required/>
-    </div>
-    <div class="table-row">
-        <label for="password">Password</label>
-        <input type="password" name="password" placeholder="Enter your password" required/>
-    </div>
-    <div class="table-row">
-        <input type="submit" value="login"/>
-        <input type="hidden" name="next" value="{{ next }}">
-    </div>
-</form>
--->
+
 <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     <table>
@@ -50,5 +34,5 @@
 </form>
 <hr>
 <h2>Don't have an account yet? Start by clicking from the link below.</h2>
-<a href="">Create new account</a>
+<a href="{% url "sign-up" %}">Create new account</a>
 {% endblock %}
