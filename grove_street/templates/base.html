@@ -14,6 +14,17 @@
             {% block header %}
             <div id="header-content">
                 <h1><a href="{% url "home" %}">Grove street - <span class="accent-1">Home</span></a></h1>
+                <div class="log-in-container">
+                    {% if user.is_authenticated %}
+                    <p>Logged in as <span class="accent-1">{{ user.get_username }}</span></p>
+                    <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+                        {% csrf_token %}
+                        <input type="submit" value="logout">
+                    </form>
+                    {% else %}
+                    <a href="{% url "login" %}?next={{ request.path }}">Log in</a>
+                    {% endif %}
+                </div>
             </div>
             {% endblock %}
         </div>
