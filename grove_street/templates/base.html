@@ -17,7 +17,7 @@
                 <div class="log-in-container">
                     {% if user.is_authenticated %}
                     <p>Logged in as <span class="accent-1">{{ user.get_username }}</span></p>
-                    <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+                    <form id="logout-form" method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
                         <input type="submit" value="logout">
                     </form>
