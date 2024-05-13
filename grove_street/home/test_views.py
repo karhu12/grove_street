@@ -1,8 +1,4 @@
-import sys
-from datetime import timedelta
-
 from django.test import TestCase
-from django.utils.timezone import now
 
 from home.test_utils import (
     create_blog_post,
