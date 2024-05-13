@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% if perms.home.can_delete %}
+<h1>Are you sure you want to delete blog post id {{ blog_post.id }} '{{ blog_post.title }}'?</h1>
+<form action="{% url "blog_post_delete" blog_post.id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="DELETE">
+</form>
+{% else %}
+<h1>You do not have permissions to delete this post.</h1>
+{% endif%}
+{% endblock%}

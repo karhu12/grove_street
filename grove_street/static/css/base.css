@@ -187,4 +187,9 @@ label {
 
 .icon-button:hover {
     background-color: var(--primary-color);
+    cursor: pointer;
+}
+
+.link-class {
+    display: block;
 }

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% if perms.home.can_edit %}
+<h1>Editing blog post id {{ blog_post.id }}</h1>
+<hr>
+<form action="{% url 'blog_post_edit' blog_post.id %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+{% else %}
+<h1>You do not have permissions to edit this post.</h1>
+{% endif%}
+{% endblock%}
