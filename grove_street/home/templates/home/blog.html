@@ -11,6 +11,20 @@
                 <h2>{{ post.title }}</h2>
                 <p>{{ post.published_date }}</p>
                 <p>{{ post.author }}</p>
+                {% if perms.home %}
+                <div class="top-right-container">
+                    {% if perms.home.can_edit %}
+                    <button class="icon-button" name="edit" type="button">
+                        <img src="{% static 'img/edit.svg' %}"/>
+                    </button>
+                    {% endif %}
+                    {% if perms.home.can_delete %}
+                    <button class="icon-button" name="delete" type="button">
+                        <img src="{% static 'img/delete.svg' %}"/>
+                    </button>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
         </a>
         {% endfor %}

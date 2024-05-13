@@ -39,6 +39,7 @@ body {
 
 
 #content {
+    position: relative;
     margin-left: auto;
     margin-right: auto;
     max-width: 1200px;
@@ -110,14 +111,17 @@ a:hover {
 }
 
 .blog-posts-preview-container {
+    position: relative;
     margin: 10px 0px;
 }
 
 .blog-post-preview-container {
+    position: relative;
     padding: 5px 10px;
     background: var(--secondary-color);
     color: white;
     border-radius: 10px;
+    margin-bottom: 15px;
 }
 
 .blog-post-preview-container:hover {
@@ -169,4 +173,18 @@ label, input {
 
 label {
     padding-right: 10px;
+}
+
+.top-right-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.icon-button {
+    background-color: var(--secondary-color);
+}
+
+.icon-button:hover {
+    background-color: var(--primary-color);
 }
