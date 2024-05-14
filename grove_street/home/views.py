@@ -38,24 +38,29 @@ def blog(request: HttpRequest, page: int = 1):
             "latest_posts": latest_posts,
             "previous_page": page - 1,
             "page": page,
-            "next_page": page + 1
+            "next_page": page + 1,
         },
     )
+
 
 def blog_post(request: HttpRequest, id: int):
     """Endpoint for checking an individual blog post."""
     blog_post = get_object_or_404(BlogPost, pk=id)
     return render(request, "home/blog_post.html", {"blog_post": blog_post})
 
+
 class BlogPostEditView(PermissionRequiredMixin, View):
     """View to edit individual blog post."""
+
     permission_required = "home.can_edit"
 
     def get(self, request: HttpRequest, id: int):
         """GET Endpoint for editing an individual blog post."""
         blog_post = get_object_or_404(BlogPost, pk=id)
         form = BlogPostForm({"title": blog_post.title, "content": blog_post.content})
-        return render(request, "home/blog_post_edit.html", {"blog_post": blog_post, "form": form})
+        return render(
+            request, "home/blog_post_edit.html", {"blog_post": blog_post, "form": form}
+        )
 
     def post(self, request: HttpRequest, id: int):
         """POST endpoint for submitting individual blog post edit."""
@@ -71,8 +76,10 @@ class BlogPostEditView(PermissionRequiredMixin, View):
             return redirect(reverse("blog_post", args=[id]))
         return render(request, "home/blog_post_edit.html", {"form": form})
 
+
 class BlogPostDeleteView(PermissionRequiredMixin, View):
     """View to delete individual blog post."""
+
     permission_required = "home.can_delete"
 
     def get(self, request: HttpRequest, id: int):
@@ -85,6 +92,7 @@ class BlogPostDeleteView(PermissionRequiredMixin, View):
         post = get_object_or_404(BlogPost, pk=id)
         post.delete()
         return redirect(reverse("blog"))
+
 
 # POST
 
