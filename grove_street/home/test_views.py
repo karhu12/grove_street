@@ -1,4 +1,6 @@
 from django.test import TestCase
+from django.contrib.auth.models import Permission
+from django.contrib.auth import login
 
 from home.test_utils import (
     create_blog_post,
@@ -6,6 +8,7 @@ from home.test_utils import (
     create_blog_posts_with_differing_published_date,
 )
 from home.constants import MAX_BLOG_POSTS_ON_BLOG_PAGE, MAX_BLOG_POSTS_ON_HOME_PAGE
+from home.models import BlogPost
 
 
 class HomeViewTestCase(TestCase):
@@ -127,9 +130,7 @@ class BlogViewTestCase(TestCase):
 
         response = self.client.get("/blog/posts/page-2/")
 
-        self.assertEqual(
-            len(response.context["latest_posts"]), 1
-        )
+        self.assertEqual(len(response.context["latest_posts"]), 1)
 
         self.assertEqual(response.context["latest_posts"][-1], blog_posts[-1])
 
@@ -138,3 +139,60 @@ class BlogViewTestCase(TestCase):
             '<div class="blog-post-preview-container">',
             count=1,
         )
+
+
+class BlogEditViewTestCase(TestCase):
+    """Test that '/blog/post/<id>/edit' view works as intended."""
+
+    def test_that_view_is_not_shown_without_permissions(self):
+        """Test that user logged in without permissions can not view the page."""
+        user = create_test_user()
+        self.client.force_login(user)
+        blog_post = create_blog_post(user)
+
+        response = self.client.get(f"/blog/post/{blog_post.pk}/edit/", follow=True)
+        self.assertEqual(response.status_code, 403)
+
+    def test_that_view_is_shown_with_permissions(self):
+        """Test that user logged in with permissions can view the page."""
+        user = create_test_user()
+        can_edit_permission = Permission.objects.get(codename="can_edit")
+        user.user_permissions.add(can_edit_permission)
+        self.client.force_login(user)
+        blog_post = create_blog_post(user)
+
+        response = self.client.get(f"/blog/post/{blog_post.pk}/edit/", follow=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_that_edit_view_redirects_to_login(self):
+        """Test that edit view redirects to login page if user has not logged in."""
+        user = create_test_user()
+        blog_post = create_blog_post(user)
+
+        response = self.client.get(f"/blog/post/{blog_post.pk}/edit/", follow=True)
+        self.assertRedirects(
+            response, f"/accounts/login/?next=/blog/post/{blog_post.pk}/edit/"
+        )
+
+    def test_that_edit_view_works(self):
+        """Test that submitted form from edit view modifies the created blog post."""
+        user = create_test_user()
+        can_edit_permission = Permission.objects.get(codename="can_edit")
+        user.user_permissions.add(can_edit_permission)
+        self.client.force_login(user)
+        blog_post = create_blog_post(user)
+
+        new_title = "Edited title"
+        new_content = "Edited content"
+
+        response = self.client.post(
+            f"/blog/post/{blog_post.pk}/edit/",
+            {"title": new_title, "content": new_content},
+            follow=True,
+        )
+        self.assertRedirects(response, f"/blog/post/{blog_post.pk}/")
+
+        blog_post = BlogPost.objects.get(pk=blog_post.pk)
+        self.assertEqual(blog_post.title, new_title)
+        self.assertEqual(blog_post.content, new_content)
+        self.assertNotEqual(blog_post.edited_date, None)
