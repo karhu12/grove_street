@@ -46,7 +46,7 @@ def create_blog_post(
         (user, "author"),
         (published_date, "published_date"),
         (title, "title"),
-        (content, "content")
+        (content, "content"),
     ]:
         if option:
             options[option_name] = option
@@ -54,6 +54,7 @@ def create_blog_post(
     blog_post = BlogPost(**options)
     blog_post.save()
     return blog_post
+
 
 def create_blog_posts_with_differing_published_date(count: int) -> list[BlogPost]:
     """Creates blog posts with each of the blog post having different published date.

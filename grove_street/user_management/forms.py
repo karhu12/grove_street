@@ -7,7 +7,9 @@ class SignUpForm(forms.Form):
     """Form user for signing up."""
 
     username = forms.CharField(label="Your username", max_length=256)
-    password = forms.CharField(label="Your password", max_length=256, widget=forms.PasswordInput)
+    password = forms.CharField(
+        label="Your password", max_length=256, widget=forms.PasswordInput
+    )
 
     def clean(self):
         """Clean form data.
