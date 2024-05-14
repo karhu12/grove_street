@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-{% if perms.home.can_delete %}
+{% if perms.home.can_remove %}
 <h1>Are you sure you want to delete blog post id {{ blog_post.id }} '{{ blog_post.title }}'?</h1>
 <form action="{% url "blog_post_delete" blog_post.id %}" method="post">
     {% csrf_token %}
