@@ -142,7 +142,7 @@ class BlogViewTestCase(TestCase):
 
 
 class BlogEditViewTestCase(TestCase):
-    """Test that '/blog/post/<id>/edit' view works as intended."""
+    """Test that '/blog/post/<id>/edit/' view works as intended."""
 
     def test_that_view_is_not_shown_without_permissions(self):
         """Test that user logged in without permissions can not view the page."""
@@ -164,7 +164,7 @@ class BlogEditViewTestCase(TestCase):
         response = self.client.get(f"/blog/post/{blog_post.pk}/edit/", follow=True)
         self.assertEqual(response.status_code, 200)
 
-    def test_that_edit_view_redirects_to_login(self):
+    def test_that_view_redirects_to_login(self):
         """Test that edit view redirects to login page if user has not logged in."""
         user = create_test_user()
         blog_post = create_blog_post(user)
@@ -174,7 +174,7 @@ class BlogEditViewTestCase(TestCase):
             response, f"/accounts/login/?next=/blog/post/{blog_post.pk}/edit/"
         )
 
-    def test_that_edit_view_works(self):
+    def test_that_view_works(self):
         """Test that submitted form from edit view modifies the created blog post."""
         user = create_test_user()
         can_edit_permission = Permission.objects.get(codename="can_edit")
@@ -196,3 +196,52 @@ class BlogEditViewTestCase(TestCase):
         self.assertEqual(blog_post.title, new_title)
         self.assertEqual(blog_post.content, new_content)
         self.assertNotEqual(blog_post.edited_date, None)
+
+
+class BlogDeleteViewTestCase(TestCase):
+    """Test that '/blog/post/<id>/delete/' view works as intended."""
+
+    def test_that_view_is_not_shown_without_permissions(self):
+        """Test that user logged in without permissions can not view the page."""
+        user = create_test_user()
+        self.client.force_login(user)
+        blog_post = create_blog_post(user)
+
+        response = self.client.get(f"/blog/post/{blog_post.pk}/delete/", follow=True)
+        self.assertEqual(response.status_code, 403)
+
+    def test_that_view_is_shown_with_permissions(self):
+        """Test that user logged in with permissions can view the page."""
+        user = create_test_user()
+        can_remove_permission = Permission.objects.get(codename="can_remove")
+        user.user_permissions.add(can_remove_permission)
+        self.client.force_login(user)
+        blog_post = create_blog_post(user)
+
+        response = self.client.get(f"/blog/post/{blog_post.pk}/delete/", follow=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_that_view_redirects_to_login(self):
+        """Test that delete view redirects to login page if user has not logged in."""
+        user = create_test_user()
+        blog_post = create_blog_post(user)
+
+        response = self.client.get(f"/blog/post/{blog_post.pk}/delete/", follow=True)
+        self.assertRedirects(
+            response, f"/accounts/login/?next=/blog/post/{blog_post.pk}/delete/"
+        )
+
+    def test_that_view_works(self):
+        """Test that submitted form from delete view modifies the created blog post."""
+        user = create_test_user()
+        can_remove_permission = Permission.objects.get(codename="can_remove")
+        user.user_permissions.add(can_remove_permission)
+        self.client.force_login(user)
+        blog_post = create_blog_post(user)
+
+        response = self.client.post(
+            f"/blog/post/{blog_post.pk}/delete/",
+            follow=True,
+        )
+        self.assertRedirects(response, f"/blog/posts/")
+        self.assertRaises(BlogPost.DoesNotExist, BlogPost.objects.get, pk=blog_post.pk)

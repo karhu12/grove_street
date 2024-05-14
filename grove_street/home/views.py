@@ -80,7 +80,7 @@ class BlogPostEditView(PermissionRequiredMixin, View):
 class BlogPostDeleteView(PermissionRequiredMixin, View):
     """View to delete individual blog post."""
 
-    permission_required = "home.can_delete"
+    permission_required = "home.can_remove"
 
     def get(self, request: HttpRequest, id: int):
         """GET Endpoint for deleting an individual blog post."""

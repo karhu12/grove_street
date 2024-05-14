@@ -34,7 +34,7 @@
                     </button>
                 </a>
                 {% endif %}
-                {% if perms.home.can_delete %}
+                {% if perms.home.can_remove %}
                 <a href="{% url 'blog_post_delete' post.id %}">
                     <button class="icon-button" name="delete" type="button">
                         <img src="{% static 'img/delete.svg' %}"/>
