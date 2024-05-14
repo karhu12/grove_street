@@ -3,6 +3,7 @@ from django.http import HttpRequest, Http404
 from django.views import View
 from django.urls import reverse
 from django.utils.timezone import now
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from home.models import get_latest_blog_posts, BlogPost
 from home.forms import BlogPostForm
@@ -46,8 +47,9 @@ def blog_post(request: HttpRequest, id: int):
     blog_post = get_object_or_404(BlogPost, pk=id)
     return render(request, "home/blog_post.html", {"blog_post": blog_post})
 
-class BlogPostEditView(View):
+class BlogPostEditView(PermissionRequiredMixin, View):
     """View to edit individual blog post."""
+    permission_required = "home.can_edit"
 
     def get(self, request: HttpRequest, id: int):
         """GET Endpoint for editing an individual blog post."""
@@ -69,18 +71,20 @@ class BlogPostEditView(View):
             return redirect(reverse("blog_post", args=[id]))
         return render(request, "home/blog_post_edit.html", {"form": form})
 
-class BlogPostDeleteView(View):
+class BlogPostDeleteView(PermissionRequiredMixin, View):
     """View to delete individual blog post."""
+    permission_required = "home.can_delete"
 
     def get(self, request: HttpRequest, id: int):
         """GET Endpoint for deleting an individual blog post."""
         blog_post = get_object_or_404(BlogPost, pk=id)
         return render(request, "home/blog_post_delete.html", {"blog_post": blog_post})
 
-    def post(self, request: HttpRequest, id: int):
+    def post(self, _: HttpRequest, id: int):
         """POST Endpoint for submitting blog post deletion."""
-        # TODO
-        return redirect(f"/blog/post/{id}/delete/")
+        post = get_object_or_404(BlogPost, pk=id)
+        post.delete()
+        return redirect(reverse("blog"))
 
 # POST
 
