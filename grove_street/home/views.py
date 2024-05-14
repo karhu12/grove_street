@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpRequest, Http404
 from django.views import View
+from django.urls import reverse
+from django.utils.timezone import now
 
 from home.models import get_latest_blog_posts, BlogPost
 from home.forms import BlogPostForm
@@ -55,8 +57,17 @@ class BlogPostEditView(View):
 
     def post(self, request: HttpRequest, id: int):
         """POST endpoint for submitting individual blog post edit."""
-        # TODO
-        return redirect(f"/blog/post/{id}/edit/")
+        form = BlogPostForm(request.POST)
+        post = get_object_or_404(BlogPost, pk=id)
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            content = form.cleaned_data["content"]
+            post.title = title
+            post.content = content
+            post.edited_date = now()
+            post.save()
+            return redirect(reverse("blog_post", args=[id]))
+        return render(request, "home/blog_post_edit.html", {"form": form})
 
 class BlogPostDeleteView(View):
     """View to delete individual blog post."""

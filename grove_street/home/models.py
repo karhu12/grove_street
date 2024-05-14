@@ -9,6 +9,7 @@ class BlogPost(models.Model):
     published_date = models.DateTimeField("Published date")
     title = models.CharField(max_length=100)
     content = models.TextField()
+    edited_date = models.DateTimeField("Edited date", blank=True, null=True)
 
     class Meta:
         permissions = [
