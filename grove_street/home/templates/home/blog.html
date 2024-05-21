@@ -2,7 +2,16 @@
 {% load static %}
 
 {% block content %}
-<h1>Blog posts</h1>
+<div class="row-container">
+    <h1 style="display: inline-block;">Blog posts</h1>
+    {% if perms.home.can_publish %}
+    <a href="">
+        <button class="icon-button" name="add" type="button">
+            <img src="{% static 'img/add.svg' %}"/>
+        </button>
+    </a>
+    {% endif %}
+</div>
 {% if latest_posts %}
     <div class="blog-posts-preview-container">
         {% for post in latest_posts %}
