@@ -3,22 +3,28 @@ from typing import Optional
 
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 
 from home.models import BlogPost
 
 
-def create_test_user(username: str = "TEST_USER", password: str = "TEST_PW") -> User:
+def create_test_user(
+    username: str = "TEST_USER", password: str = "TEST_PW", permissions: list[str] = []
+) -> User:
     """Creates test user with given username and password.
 
     Args:
         username: Username for the new user.
         password: Password for the new user.
+        permissions: Permission codenames to be given to the user as a list.
     Returns:
         Created user.
     """
     user_model = get_user_model()
     user = user_model.objects.create_user(username=username, password=password)
+    for code_name in permissions:
+        permission = Permission.objects.get(codename=code_name)
+        user.user_permissions.add(permission)
     user.save()
     return user
 

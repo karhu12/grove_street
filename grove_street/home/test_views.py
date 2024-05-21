@@ -155,9 +155,7 @@ class BlogEditViewTestCase(TestCase):
 
     def test_that_view_is_shown_with_permissions(self):
         """Test that user logged in with permissions can view the page."""
-        user = create_test_user()
-        can_edit_permission = Permission.objects.get(codename="can_edit")
-        user.user_permissions.add(can_edit_permission)
+        user = create_test_user(permissions=["can_edit"])
         self.client.force_login(user)
         blog_post = create_blog_post(user)
 
@@ -176,9 +174,7 @@ class BlogEditViewTestCase(TestCase):
 
     def test_that_view_works(self):
         """Test that submitted form from edit view modifies the created blog post."""
-        user = create_test_user()
-        can_edit_permission = Permission.objects.get(codename="can_edit")
-        user.user_permissions.add(can_edit_permission)
+        user = create_test_user(permissions=["can_edit"])
         self.client.force_login(user)
         blog_post = create_blog_post(user)
 
@@ -198,50 +194,72 @@ class BlogEditViewTestCase(TestCase):
         self.assertNotEqual(blog_post.edited_date, None)
 
 
-class BlogDeleteViewTestCase(TestCase):
-    """Test that '/blog/post/<id>/delete/' view works as intended."""
+class BlogPublishViewTestCase(TestCase):
+    """Test that '/blog/posts/publish/' view works as intended."""
 
     def test_that_view_is_not_shown_without_permissions(self):
         """Test that user logged in without permissions can not view the page."""
         user = create_test_user()
         self.client.force_login(user)
-        blog_post = create_blog_post(user)
 
-        response = self.client.get(f"/blog/post/{blog_post.pk}/delete/", follow=True)
+        response = self.client.get(f"/blog/posts/publish/", follow=True)
         self.assertEqual(response.status_code, 403)
 
     def test_that_view_is_shown_with_permissions(self):
         """Test that user logged in with permissions can view the page."""
-        user = create_test_user()
-        can_remove_permission = Permission.objects.get(codename="can_remove")
-        user.user_permissions.add(can_remove_permission)
+        user = create_test_user(permissions=["can_publish"])
         self.client.force_login(user)
-        blog_post = create_blog_post(user)
 
-        response = self.client.get(f"/blog/post/{blog_post.pk}/delete/", follow=True)
+        response = self.client.get(f"/blog/posts/publish/", follow=True)
         self.assertEqual(response.status_code, 200)
 
     def test_that_view_redirects_to_login(self):
-        """Test that delete view redirects to login page if user has not logged in."""
-        user = create_test_user()
-        blog_post = create_blog_post(user)
-
-        response = self.client.get(f"/blog/post/{blog_post.pk}/delete/", follow=True)
+        """Test that publish view redirects to login page if user has not logged in."""
+        response = self.client.get(f"/blog/posts/publish/", follow=True)
         self.assertRedirects(
-            response, f"/accounts/login/?next=/blog/post/{blog_post.pk}/delete/"
+            response, f"/accounts/login/?next=/blog/posts/publish/"
         )
 
     def test_that_view_works(self):
-        """Test that submitted form from delete view modifies the created blog post."""
-        user = create_test_user()
-        can_remove_permission = Permission.objects.get(codename="can_remove")
-        user.user_permissions.add(can_remove_permission)
+        """Test that submitted form from publish view creates a new blog post."""
+        user = create_test_user(permissions=["can_publish"])
         self.client.force_login(user)
-        blog_post = create_blog_post(user)
+
+        title = "Title"
+        content = "Content"
 
         response = self.client.post(
-            f"/blog/post/{blog_post.pk}/delete/",
+            f"/blog/posts/publish/",
+            {"title": title, "content": content},
             follow=True,
         )
         self.assertRedirects(response, f"/blog/posts/")
-        self.assertRaises(BlogPost.DoesNotExist, BlogPost.objects.get, pk=blog_post.pk)
+
+        blog_post = BlogPost.objects.get(title=title)
+        self.assertEqual(blog_post.title, title)
+        self.assertEqual(blog_post.content, content)
+        self.assertEqual(blog_post.edited_date, None)
+
+    def test_invalid_blog_post(self):
+        """Test that invalid blog post can not be published."""
+        user = create_test_user(permissions=["can_publish"])
+        self.client.force_login(user)
+
+        # Empty content for either title or content is considered invalid
+        title = ""
+        content = ""
+
+        response = self.client.post(
+            f"/blog/posts/publish/",
+            {"title": title, "content": content},
+            follow=True,
+        )
+        self.assertEqual(len(response.context["form"].errors), 2)
+        self.assertEqual(
+            response.context["form"].errors["title"][0],
+            "This field is required.",
+        )
+        self.assertEqual(
+            response.context["form"].errors["content"][0],
+            "This field is required.",
+        )
