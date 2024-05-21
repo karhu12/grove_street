@@ -28,6 +28,8 @@ DEBUG = os.environ.get("DEBUG", True)
 
 ALLOWED_HOSTS = []
 
+USE_TZ = True
+
 
 # Application definition
 
@@ -131,7 +133,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Helsinki"
 
 USE_I18N = True
 

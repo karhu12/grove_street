@@ -16,6 +16,7 @@ class BlogPost(models.Model):
             ("can_publish", "Can publish new blog posts."),
             ("can_edit", "Can modify existing blog posts."),
             ("can_remove", "Can remove existing blog posts."),
+            ("can_comment", "Can comment on blog posts.")
         ]
 
         constraints = [

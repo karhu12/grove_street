@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% if perms.home.can_publish %}
+<h1>New blog post</h1>
+<hr>
+{% if form.errors %}
+    <ul class="user-msg error">
+    {% for field in form %}
+        {% for error in field.errors %}
+            <li>
+              {% if field != '__all__' %}
+                <strong>{{ field.label }}:</strong>
+              {% endif %}
+              {{ error }}
+            </li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+{% endif %}
+<form action="{% url 'blog_post_publish' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+{% else %}
+<h1>You do not have permissions to publish new blog post.</h1>
+{% endif%}
+{% endblock %}

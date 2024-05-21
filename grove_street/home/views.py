@@ -94,8 +94,27 @@ class BlogPostDeleteView(PermissionRequiredMixin, View):
         return redirect(reverse("blog"))
 
 
-# POST
+class PublishBlogPostView(PermissionRequiredMixin, View):
+    """View to publish a new blog post."""
 
+    permission_required = "home.can_publish"
 
-def publish_blog_post(request: HttpRequest):
-    pass
+    def get(self, request: HttpRequest):
+        """GET Endpoint for publishing a new blog post."""
+        form = BlogPostForm()
+        return render(request, "home/blog_post_publish.html", {"form": form})
+
+    def post(self, request: HttpRequest):
+        """POST Endpoint for submitting created blog post."""
+        form = BlogPostForm(request.POST)
+        if form.is_valid():
+            data = {
+                "title": form.cleaned_data["title"],
+                "content": form.cleaned_data["content"],
+                "published_date": now(),
+                "author": request.user,
+            }
+            blog_post = BlogPost.objects.create(**data)
+            blog_post.save()
+            return redirect(reverse("blog"))
+        return render(request, "home/blog_post_publish.html", {"form": form})

@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views import View
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 
 from user_management.forms import SignUpForm
 
@@ -20,7 +20,10 @@ class SignUpView(View):
         if form.is_valid():
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
-            User.objects.create_user(username=username, password=password)
+            user = User.objects.create_user(username=username, password=password)
+            can_publish_permission = Permission.objects.get(codename="can_publish")
+            can_comment_permission = Permission.objects.get(codename="can_comment")
+            user.user_permissions.add(can_publish_permission, can_comment_permission)
             return redirect("sign-up-completed")
 
         return render(request, "user_management/sign_up.html", {"form": form})

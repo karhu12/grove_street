@@ -5,7 +5,7 @@
 <div class="row-container">
     <h1 style="display: inline-block;">Blog posts</h1>
     {% if perms.home.can_publish %}
-    <a href="">
+    <a href="{% url 'blog_post_publish' %}">
         <button class="icon-button" name="add" type="button">
             <img src="{% static 'img/add.svg' %}"/>
         </button>
