@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.utils.timezone import now
 from django.contrib.auth.models import User, Permission
 
-from home.models import BlogPost
+from home.models import BlogPost, BlogPostComment
 
 
 def create_test_user(
@@ -38,7 +38,7 @@ def create_blog_post(
     """Creates and saves new blog post with given arguments to the database.
 
     Args:
-        user: Author of the blog post (Can be none).
+        user: Author of the blog post.
         published_date: Datetime when the blog post was published.
         title: Title of the blog post.
         content: Content of the blog post.
@@ -86,3 +86,35 @@ def create_blog_posts_with_differing_published_date(count: int) -> list[BlogPost
 
     blog_posts.sort(key=lambda item: item.published_date, reverse=True)
     return blog_posts
+
+def create_blog_post_comment(
+    blog_post: Optional[BlogPost] = None,
+    user: Optional[User] = None,
+    created_date: datetime = now(),
+    content: str = "Content"
+) -> BlogPostComment:
+    """Creates a blog post comment for the given blog post using the given information.
+
+    Args:
+        blog_post: Blog post for which this comment is created for.
+        user: Author of the this comment.
+        created_date: Datetime when the comment was created.
+        content: Content of the blog post.
+    Returns:
+        Created blog post.
+    Raises:
+        IntegrityError: Saving blog post failed.
+    """
+    options = {}
+    for option, option_name in [
+        (blog_post, "blog_post"),
+        (user, "author"),
+        (created_date, "created_date"),
+        (content, "content"),
+    ]:
+        if option:
+            options[option_name] = option
+
+    comment = BlogPostComment(**options)
+    comment.save()
+    return comment
