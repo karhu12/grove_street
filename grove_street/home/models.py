@@ -83,3 +83,10 @@ def get_latest_blog_post_comments(
     Returns:
         Latest blog post comments (Or None if none found).
     """
+    try:
+        comments = BlogPostComment.objects.order_by("-created_date")
+        if start_index is not None or end_index is not None:
+            comments = comments[start_index:end_index]
+    except BlogPostComment.DoesNotExist:
+        comments = None
+    return comments
