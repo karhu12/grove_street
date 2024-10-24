@@ -14,25 +14,25 @@
 <p>Author: {{ blog_post.author }}</p>
 <h2>Comments</h2>
 {% if comments %}
-    {% for comment in comments %}
-        <div class="blog-post-comment-container">
-            <p class="blog-post-comment-author">@{{ comment.author }}</p>
-            <p class="blog-post-comment-created-date">{{ comment.created_date | time_since_date }}</p>
-            <p class="blog-post-comment-content">{{ comment.content }}</p>
-        </div>
-    {% endfor %}
+{% for comment in comments %}
+<div class="blog-post-comment-container">
+    <p class="blog-post-comment-author">@{{ comment.author }}</p>
+    <p class="blog-post-comment-created-date">{{ comment.created_date|time_since_date }}</p>
+    <p class="blog-post-comment-content">{{ comment.content }}</p>
+</div>
+{% endfor %}
 
-    {% if comments.has_previous %}
-        <a href="{% url "blog_post" blog_post.id %}?page={{ comments.previous_page_number }}">Previous page</a>
-        <div class="vertical-line"></div>
-    {% endif %}
-    <span class="page-number">Page {{ comments.number }}</span>
-    {% if comments.has_next %}
-        <div class="vertical-line"></div>
-        <a href="{% url 'blog_post' id=blog_post.pk %}?page={{ comments.next_page_number }}">Next page</a>
-    {% endif%}
+{% if comments.has_previous %}
+<a href="{% url "blog_post" blog_post.id %}?page={{ comments.previous_page_number }}">Previous page</a>
+<div class="vertical-line"></div>
+{% endif %}
+<span class="page-number">Page {{ comments.number }}</span>
+{% if comments.has_next %}
+<div class="vertical-line"></div>
+<a href="{% url 'blog_post' id=blog_post.pk %}?page={{ comments.next_page_number }}">Next page</a>
+{% endif%}
 {% else %}
-    <p>There are no comments for this blog post yet.</p>
+<p>There are no comments for this blog post yet.</p>
 {% endif %}
 {% if perms.home %}
 <div class="top-right-container">
