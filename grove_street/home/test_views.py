@@ -90,21 +90,6 @@ class BlogPostsViewTestCase(TestCase):
 
         self.assertContains(response, "No blog posts available!", 1)
 
-    def test_created_posts_shown(self):
-        """Test that the created posts are shown on the first page."""
-        blog_posts = create_blog_posts_with_differing_published_date(5)
-
-        response = self.client.get("/blog/posts/page-1/")
-
-        self.assertEqual(len(response.context["latest_posts"]), 5)
-
-        for i in range(5):
-            self.assertEqual(response.context["latest_posts"][i], blog_posts[i])
-
-        self.assertContains(
-            response, '<div class="blog-post-preview-container">', count=5
-        )
-
     def test_up_to_max_posts_shown(self):
         """Test that only up to maximum amount of posts per page are shown on the first page."""
         blog_posts = create_blog_posts_with_differing_published_date(
@@ -172,14 +157,17 @@ class BlogViewTestCase(TestCase):
             response, "There are no comments for this blog post yet.", 1
         )
 
-    def test_comments_are_shown(self):
-        """Test that page shows comments left for the blog post."""
+    def test_comments_are_working(self):
+        """Test that page shows comments left for the blog post and pagination works."""
         user = create_test_user()
         post = create_blog_post(user)
+
+        extra_comments = 5
         comments = create_blog_post_comments_with_differing_published_date(
-            BLOG_POST_COMMENTS_PER_PAGE + 1, user
+            BLOG_POST_COMMENTS_PER_PAGE + extra_comments, user
         )
 
+        # Verify page 1 works as intended
         response = self.client.get(f"/blog/post/{post.pk}/")
 
         self.assertEqual(len(response.context["comments"]), BLOG_POST_COMMENTS_PER_PAGE)
@@ -192,6 +180,33 @@ class BlogViewTestCase(TestCase):
             '<div class="blog-post-comment-container">',
             count=BLOG_POST_COMMENTS_PER_PAGE,
         )
+
+        self.assertContains(response, "Next page", 1)
+        self.assertContains(response, "Page 1", 1)
+        self.assertNotContains(response, "Previous page")
+
+        self.assertEqual(response.status_code, 200, "Status code")
+
+        # Verify page 2 works as intended
+        response = self.client.get(f"/blog/post/{post.pk}/?page=2")
+
+        self.assertEqual(len(response.context["comments"]), extra_comments)
+
+        for i in range(extra_comments):
+            self.assertEqual(
+                response.context["comments"][i],
+                comments[BLOG_POST_COMMENTS_PER_PAGE + i],
+            )
+
+        self.assertContains(
+            response,
+            '<div class="blog-post-comment-container">',
+            count=extra_comments,
+        )
+
+        self.assertNotContains(response, "Next page")
+        self.assertContains(response, "Page 2", 1)
+        self.assertContains(response, "Previous page", 1)
 
         self.assertEqual(response.status_code, 200, "Status code")
 
