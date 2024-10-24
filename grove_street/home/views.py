@@ -4,13 +4,18 @@ from django.views import View
 from django.urls import reverse
 from django.utils.timezone import now
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.paginator import Paginator
 
-from home.models import get_latest_blog_posts, get_latest_blog_post_comments, BlogPost
+from home.models import (
+    get_latest_blog_posts,
+    BlogPost,
+    BlogPostComment,
+)
 from home.forms import BlogPostForm
 from home.constants import (
     MAX_BLOG_POSTS_ON_HOME_PAGE,
     MAX_BLOG_POSTS_ON_BLOG_PAGE,
-    BLOG_POST_COMMENTS_PER_LOAD
+    BLOG_POST_COMMENTS_PER_PAGE,
 )
 
 
@@ -48,14 +53,20 @@ def blog(request: HttpRequest, page: int = 1):
 def blog_post(request: HttpRequest, id: int):
     """Endpoint for checking an individual blog post."""
     blog_post = get_object_or_404(BlogPost, pk=id)
-    comments = get_latest_blog_post_comments(id, 0, BLOG_POST_COMMENTS_PER_LOAD)
+    paginator = Paginator(
+        BlogPostComment.objects.order_by("-created_date"), BLOG_POST_COMMENTS_PER_PAGE
+    )
+
+    page = request.GET.get("page", 1)
+    comments = paginator.get_page(page)
+
     return render(
         request,
         "home/blog_post.html",
         {
             "blog_post": blog_post,
             "comments": comments,
-        }
+        },
     )
 
 

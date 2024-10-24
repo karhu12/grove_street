@@ -67,26 +67,3 @@ class BlogPostComment(models.Model):
                 name="blog_post_comment_content_populated",
             ),
         ]
-
-
-def get_latest_blog_post_comments(
-    blog_post_id: int,
-    start_index: Optional[int] = None,
-    end_index: Optional[int] = None,
-) -> Optional[models.QuerySet[BlogPostComment]]:
-    """Get latest comments for given blog post.
-
-    Args:
-        blog_post_id: Blog post id which to fetch comments for.
-        start_index: Start index of returned posts.
-        end_index: End index of returned posts.
-    Returns:
-        Latest blog post comments (Or None if none found).
-    """
-    try:
-        comments = BlogPostComment.objects.order_by("-created_date")
-        if start_index is not None or end_index is not None:
-            comments = comments[start_index:end_index]
-    except BlogPostComment.DoesNotExist:
-        comments = None
-    return comments

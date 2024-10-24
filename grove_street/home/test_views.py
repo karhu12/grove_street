@@ -10,7 +10,7 @@ from home.test_utils import (
 from home.constants import (
     MAX_BLOG_POSTS_ON_BLOG_PAGE,
     MAX_BLOG_POSTS_ON_HOME_PAGE,
-    BLOG_POST_COMMENTS_PER_LOAD,
+    BLOG_POST_COMMENTS_PER_PAGE,
 )
 from home.models import BlogPost
 
@@ -177,21 +177,20 @@ class BlogViewTestCase(TestCase):
         user = create_test_user()
         post = create_blog_post(user)
         comments = create_blog_post_comments_with_differing_published_date(
-            BLOG_POST_COMMENTS_PER_LOAD + 1,
-            user
+            BLOG_POST_COMMENTS_PER_PAGE + 1, user
         )
 
         response = self.client.get(f"/blog/post/{post.pk}/")
 
-        self.assertEqual(len(response.context["comments"]), BLOG_POST_COMMENTS_PER_LOAD)
+        self.assertEqual(len(response.context["comments"]), BLOG_POST_COMMENTS_PER_PAGE)
 
-        for i in range(BLOG_POST_COMMENTS_PER_LOAD):
+        for i in range(BLOG_POST_COMMENTS_PER_PAGE):
             self.assertEqual(response.context["comments"][i], comments[i])
 
         self.assertContains(
             response,
             '<div class="blog-post-comment-container">',
-            count=BLOG_POST_COMMENTS_PER_LOAD,
+            count=BLOG_POST_COMMENTS_PER_PAGE,
         )
 
         self.assertEqual(response.status_code, 200, "Status code")

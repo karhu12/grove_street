@@ -21,6 +21,16 @@
             <p class="blog-post-comment-content">{{ comment.content }}</p>
         </div>
     {% endfor %}
+
+    {% if comments.has_previous %}
+        <a href="{% url "blog_post" blog_post.id %}?page={{ comments.previous_page_number }}">Previous page</a>
+        <div class="vertical-line"></div>
+    {% endif %}
+    <span class="page-number">Page {{ comments.number }}</span>
+    {% if comments.has_next %}
+        <div class="vertical-line"></div>
+        <a href="{% url 'blog_post' id=blog_post.pk %}?page={{ comments.next_page_number }}">Next page</a>
+    {% endif%}
 {% else %}
     <p>There are no comments for this blog post yet.</p>
 {% endif %}
