@@ -1,13 +1,17 @@
 from django.test import TestCase
-from django.contrib.auth.models import Permission
-from django.contrib.auth import login
 
 from home.test_utils import (
     create_blog_post,
     create_test_user,
     create_blog_posts_with_differing_published_date,
+    create_blog_post_comment,
+    create_blog_post_comments_with_differing_published_date,
 )
-from home.constants import MAX_BLOG_POSTS_ON_BLOG_PAGE, MAX_BLOG_POSTS_ON_HOME_PAGE
+from home.constants import (
+    MAX_BLOG_POSTS_ON_BLOG_PAGE,
+    MAX_BLOG_POSTS_ON_HOME_PAGE,
+    BLOG_POST_COMMENTS_PER_LOAD,
+)
 from home.models import BlogPost
 
 
@@ -53,7 +57,7 @@ class HomeViewTestCase(TestCase):
         )
 
 
-class BlogViewTestCase(TestCase):
+class BlogPostsViewTestCase(TestCase):
     """Test that 'blog/posts/' view works as intended."""
 
     def test_404_on_invalid_pages(self):
@@ -141,6 +145,58 @@ class BlogViewTestCase(TestCase):
         )
 
 
+class BlogViewTestCase(TestCase):
+    """Test that '/blog/post/<id>/' view works as intended."""
+
+    def test_404_on_invalid_pages(self):
+        """Test that 404 is raised when invalid blog ids are tried to be accessed."""
+        invalid_ids = [-1.5, -1, 0, 1.5]
+        for id in invalid_ids:
+            response = self.client.get(f"/blog/post/{id}/")
+
+            self.assertEqual(
+                response.status_code,
+                404,
+                "Response should have status code 404 on invalid blog id.",
+            )
+
+    def test_200_on_valid_pages(self):
+        """Test that page is shown when url is valid for blog id."""
+        user = create_test_user()
+        post = create_blog_post(user)
+
+        response = self.client.get(f"/blog/post/{post.pk}/")
+
+        self.assertEqual(response.status_code, 200, "Status code")
+        self.assertContains(
+            response, "There are no comments for this blog post yet.", 1
+        )
+
+    def test_comments_are_shown(self):
+        """Test that page shows comments left for the blog post."""
+        user = create_test_user()
+        post = create_blog_post(user)
+        comments = create_blog_post_comments_with_differing_published_date(
+            BLOG_POST_COMMENTS_PER_LOAD + 1,
+            user
+        )
+
+        response = self.client.get(f"/blog/post/{post.pk}/")
+
+        self.assertEqual(len(response.context["comments"]), BLOG_POST_COMMENTS_PER_LOAD)
+
+        for i in range(BLOG_POST_COMMENTS_PER_LOAD):
+            self.assertEqual(response.context["comments"][i], comments[i])
+
+        self.assertContains(
+            response,
+            '<div class="blog-post-comment-container">',
+            count=BLOG_POST_COMMENTS_PER_LOAD,
+        )
+
+        self.assertEqual(response.status_code, 200, "Status code")
+
+
 class BlogEditViewTestCase(TestCase):
     """Test that '/blog/post/<id>/edit/' view works as intended."""
 
@@ -216,9 +272,7 @@ class BlogPublishViewTestCase(TestCase):
     def test_that_view_redirects_to_login(self):
         """Test that publish view redirects to login page if user has not logged in."""
         response = self.client.get(f"/blog/posts/publish/", follow=True)
-        self.assertRedirects(
-            response, f"/accounts/login/?next=/blog/posts/publish/"
-        )
+        self.assertRedirects(response, f"/accounts/login/?next=/blog/posts/publish/")
 
     def test_that_view_works(self):
         """Test that submitted form from publish view creates a new blog post."""
