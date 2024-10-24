@@ -131,26 +131,26 @@ def create_blog_post_comment(
 
 
 def create_blog_post_comments_with_differing_published_date(
-    count: int, user: Optional[User] = None
+    count: int, blog_post: BlogPost, user: Optional[User] = None
 ) -> list[BlogPostComment]:
     """Creates blog post comments with each of the comment having different published date.
 
     Args:
         count: How many blog post comments to create.
-        user: User which the blog post and comments belong to (create new one if not passed).
+        blog_post: Blog post which the comments belong to.
+        user: User which the new comments belong to (create new one if not passed).
     Returns:
         list of created comments sorted from newest to oldest.
     """
     comments = []
     if not user:
         user = create_test_user()
-    post = create_blog_post(user)
 
     current_datetime = now()
     for i in range(count):
         # Make sure all comments have different published date (by 1 microsecond)
         comment = create_blog_post_comment(
-            post,
+            blog_post,
             user,
             created_date=(
                 current_datetime
