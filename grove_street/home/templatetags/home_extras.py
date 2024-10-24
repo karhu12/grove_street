@@ -13,6 +13,8 @@ def time_since_date(date: datetime) -> str:
     """Return how long time has it been since date as a string.
 
     Examples:
+    "1 second ago"
+    "5 seconds ago"
     "1 minute ago"
     "24 minutes ago"
     "1 hour ago"
@@ -38,6 +40,7 @@ def time_since_date(date: datetime) -> str:
         return f"{years} {"years" if years > 1 else "year"} ago"
     elif (hours := int(delta.seconds / 60 // 60)) >= 1:
         return f"{hours} {"hours" if hours > 1 else "hour"} ago"
-    else:
+    elif (minutes := int(delta.seconds // 60)) >= 1:
         minutes = int(delta.seconds // 60)
         return f"{int(minutes)} {"minutes" if minutes > 1 else "minute"} ago"
+    return f"{delta.seconds} {"seconds" if delta.seconds > 1 else "second"} ago"

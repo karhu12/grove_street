@@ -203,6 +203,7 @@ label {
 
 .blog-post-comment-container {
     margin-top: 1em;
+    margin-bottom: 1em;
     background-color: var(--secondary-color);
     color: white;
     border-radius: 1em;
