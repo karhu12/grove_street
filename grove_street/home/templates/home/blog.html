@@ -12,9 +12,9 @@
     </a>
     {% endif %}
 </div>
-{% if latest_posts %}
+{% if page_obj %}
 <div class="blog-posts-preview-container">
-    {% for post in latest_posts %}
+    {% for post in page_obj %}
     <a class="link-class" href="{% url 'blog_post' post.id %}">
         <div class="blog-post-preview-container">
             <h2>{{ post.title }}</h2>
@@ -23,7 +23,7 @@
             {% else %}
             <p>Published: {{ post.published_date }}</p>
             {% endif %}
-            <p>Author: {{ post.author }}</p>
+            <p>Author: <span class="accent-2">{{ post.author }}</span></p>
             {% if perms.home %}
             <div class="top-right-container">
                 {% if perms.home.can_edit %}
@@ -49,13 +49,13 @@
 {% else %}
 <p class="no-blog-posts">No blog posts available!</p>
 {% endif %}
-{% if latest_posts.has_previous %}
-<a href="{% url "blog" previous_page %}">Previous page</a>
+{% if page_obj.has_previous %}
+<a href="{% url "blog" %}?page={{ page_obj.previous_page_number }}">Previous page</a>
 <div class="vertical-line"></div>
 {% endif %}
-<span class="page-number">Page {{ latest_posts.number }}</span>
-{% if latest_posts.has_next %}
+<span class="page-number">Page {{ page_obj.number }}</span>
+{% if page_obj.has_next %}
 <div class="vertical-line"></div>
-<a href="{% url 'blog' next_page %}">Next page</a>
+<a href="{% url 'blog' %}?page={{ page_obj.next_page_number }}">Next page</a>
 {% endif %}
 {% endblock %}

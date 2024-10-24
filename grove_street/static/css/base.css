@@ -128,8 +128,17 @@ a:hover {
     background-color: var(--primary-color);
 }
 
-.blog-post-preview-container h2, p {
-    margin: 4px
+.blog-post-preview-container h2 {
+    color: var(--accent-1);
+    margin: 4px;
+}
+
+.blog-post-preview-container p {
+    margin: 4px;
+}
+
+.blog-post-preview-container-author span {
+    color: var(--accent-2);
 }
 
 .vertical-line {

@@ -62,9 +62,9 @@ class BlogPostsViewTestCase(TestCase):
 
     def test_404_on_invalid_pages(self):
         """Test that 404 is raised when invalid pages are tried to be accessed."""
-        invalid_pages = [-1.5, -1, 0, 1.5]
+        invalid_pages = [-1, 0, 2]
         for invalid_page in invalid_pages:
-            response = self.client.get(f"/blog/posts/page-{invalid_page}/")
+            response = self.client.get(f"/blog/posts/?page={invalid_page}")
 
             self.assertEqual(
                 response.status_code,
@@ -78,15 +78,19 @@ class BlogPostsViewTestCase(TestCase):
         Page numbers > 0 should be considered valid up to
         atleast postgresql signed integer max value.
         """
-        valid_pages = [1, 2147483647]
-        for valid_page in valid_pages:
-            response = self.client.get(f"/blog/posts/page-{valid_page}/")
+        blog_posts = create_blog_posts_with_differing_published_date(
+            MAX_BLOG_POSTS_ON_BLOG_PAGE * 3
+        )
+
+        valid_pages = int(len(blog_posts) // MAX_BLOG_POSTS_ON_BLOG_PAGE)
+        for page in range(1, valid_pages + 1):
+            response = self.client.get(f"/blog/posts/?page={page}")
 
             self.assertEqual(response.status_code, 200, "Status code")
 
     def test_not_shown(self):
         """Test that no blog posts are shown when none are available."""
-        response = self.client.get("/blog/posts/page-1/")
+        response = self.client.get("/blog/posts/")
 
         self.assertContains(response, "No blog posts available!", 1)
 
@@ -96,14 +100,12 @@ class BlogPostsViewTestCase(TestCase):
             MAX_BLOG_POSTS_ON_BLOG_PAGE + 1
         )
 
-        response = self.client.get("/blog/posts/page-1/")
+        response = self.client.get("/blog/posts/")
 
-        self.assertEqual(
-            len(response.context["latest_posts"]), MAX_BLOG_POSTS_ON_BLOG_PAGE
-        )
+        self.assertEqual(len(response.context["page_obj"]), MAX_BLOG_POSTS_ON_BLOG_PAGE)
 
         for i in range(MAX_BLOG_POSTS_ON_BLOG_PAGE):
-            self.assertEqual(response.context["latest_posts"][i], blog_posts[i])
+            self.assertEqual(response.context["page_obj"][i], blog_posts[i])
 
         self.assertContains(
             response,
@@ -111,17 +113,17 @@ class BlogPostsViewTestCase(TestCase):
             count=MAX_BLOG_POSTS_ON_BLOG_PAGE,
         )
 
-    def correct_posts_shown_on_page_2(self):
+    def test_correct_posts_shown_on_page_2(self):
         """Test that pages that are not shown on page 1 contain the correct created posts."""
         blog_posts = create_blog_posts_with_differing_published_date(
             MAX_BLOG_POSTS_ON_BLOG_PAGE + 1
         )
 
-        response = self.client.get("/blog/posts/page-2/")
+        response = self.client.get("/blog/posts/?page=2")
 
-        self.assertEqual(len(response.context["latest_posts"]), 1)
+        self.assertEqual(len(response.context["page_obj"]), 1)
 
-        self.assertEqual(response.context["latest_posts"][-1], blog_posts[-1])
+        self.assertEqual(response.context["page_obj"][-1], blog_posts[-1])
 
         self.assertContains(
             response,
@@ -168,47 +170,67 @@ class BlogViewTestCase(TestCase):
         )
 
         # Verify page 1 works as intended
-        response = self.client.get(f"/blog/post/{post.pk}/")
+        page_1 = self.client.get(f"/blog/post/{post.pk}/")
 
-        self.assertEqual(len(response.context["comments"]), BLOG_POST_COMMENTS_PER_PAGE)
+        self.assertEqual(len(page_1.context["comments"]), BLOG_POST_COMMENTS_PER_PAGE)
 
         for i in range(BLOG_POST_COMMENTS_PER_PAGE):
-            self.assertEqual(response.context["comments"][i], comments[i])
+            self.assertEqual(page_1.context["comments"][i], comments[i])
 
         self.assertContains(
-            response,
+            page_1,
             '<div class="blog-post-comment-container">',
             count=BLOG_POST_COMMENTS_PER_PAGE,
         )
 
-        self.assertContains(response, "Next page", 1)
-        self.assertContains(response, "Page 1", 1)
-        self.assertNotContains(response, "Previous page")
+        self.assertContains(page_1, "Next page", 1)
+        self.assertContains(page_1, "Page 1", 1)
+        self.assertNotContains(page_1, "Previous page")
 
-        self.assertEqual(response.status_code, 200, "Status code")
+        self.assertEqual(page_1.status_code, 200, "Status code")
 
         # Verify page 2 works as intended
-        response = self.client.get(f"/blog/post/{post.pk}/?page=2")
+        page_2 = self.client.get(f"/blog/post/{post.pk}/?page=2")
 
-        self.assertEqual(len(response.context["comments"]), extra_comments)
+        self.assertEqual(len(page_2.context["comments"]), extra_comments)
 
         for i in range(extra_comments):
             self.assertEqual(
-                response.context["comments"][i],
+                page_2.context["comments"][i],
                 comments[BLOG_POST_COMMENTS_PER_PAGE + i],
             )
 
         self.assertContains(
-            response,
+            page_2,
             '<div class="blog-post-comment-container">',
             count=extra_comments,
         )
 
-        self.assertNotContains(response, "Next page")
-        self.assertContains(response, "Page 2", 1)
-        self.assertContains(response, "Previous page", 1)
+        self.assertNotContains(page_2, "Next page")
+        self.assertContains(page_2, "Page 2", 1)
+        self.assertContains(page_2, "Previous page", 1)
 
-        self.assertEqual(response.status_code, 200, "Status code")
+        self.assertEqual(page_2.status_code, 200, "Status code")
+
+    def test_comments_for_other_post_do_not_leak(self):
+        """Test that comment made for one blog post do not leak to the view of other."""
+        user = create_test_user()
+        blog_posts = create_blog_posts_with_differing_published_date(2, user)
+        comments = []
+
+        for post in blog_posts:
+            comment = create_blog_post_comment(post, user)
+            comments.append(comment)
+
+        post_1 = self.client.get(f"/blog/post/{blog_posts[0].pk}/")
+
+        self.assertEqual(len(post_1.context["comments"]), 1)
+        self.assertEqual(post_1.context["comments"][0], comments[0])
+
+        post_2 = self.client.get(f"/blog/post/{blog_posts[1].pk}/")
+
+        self.assertEqual(len(post_2.context["comments"]), 1)
+        self.assertEqual(post_2.context["comments"][0], comments[1])
 
 
 class BlogEditViewTestCase(TestCase):
