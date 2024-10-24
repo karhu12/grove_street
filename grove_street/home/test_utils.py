@@ -62,16 +62,22 @@ def create_blog_post(
     return blog_post
 
 
-def create_blog_posts_with_differing_published_date(count: int) -> list[BlogPost]:
+def create_blog_posts_with_differing_published_date(
+    count: int, user: Optional[User] = None
+) -> list[BlogPost]:
     """Creates blog posts with each of the blog post having different published date.
 
     Args:
         count: How many blog posts to create.
+        user: User which the blog post and comments belong to (create new one if not passed).
     Returns:
         list of created blog posts sorted from newest to oldest.
     """
     blog_posts = []
-    user = create_test_user()
+
+    if user is None:
+        user = create_test_user()
+
     current_datetime = now()
     for i in range(count):
         # Make sure all blog posts have different published date (by 1 microsecond)

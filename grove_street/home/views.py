@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpRequest, Http404
 from django.views import View
+from django.views.generic import ListView
 from django.urls import reverse
 from django.utils.timezone import now
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -30,26 +31,6 @@ def about(request: HttpRequest):
     return render(request, "home/about.html")
 
 
-def blog(request: HttpRequest, page: int = 1):
-    """Endpoint for viewing all blog posts."""
-    if page < 1:
-        raise Http404("Page number can not be lower than 1.")
-
-    end_index = MAX_BLOG_POSTS_ON_BLOG_PAGE * page
-    start_index = end_index - MAX_BLOG_POSTS_ON_BLOG_PAGE
-    latest_posts = get_latest_blog_posts(start_index, end_index)
-    return render(
-        request,
-        "home/blog.html",
-        {
-            "latest_posts": latest_posts,
-            "previous_page": page - 1,
-            "page": page,
-            "next_page": page + 1,
-        },
-    )
-
-
 def blog_post(request: HttpRequest, id: int):
     """Endpoint for checking an individual blog post."""
     blog_post = get_object_or_404(BlogPost, pk=id)
@@ -59,6 +40,17 @@ def blog_post(request: HttpRequest, id: int):
 
     page = request.GET.get("page", 1)
     comments = paginator.get_page(page)
+
+    page_number = comments.number
+    if not comments.count == 0:
+        if page_number < 1:
+            raise Http404(
+                f"Comments for blog post do not exist on page {comments.number}"
+            )
+        elif page_number > paginator.num_pages:
+            raise Http404(
+                f"Comments for blog post do not exist on page {comments.number}"
+            )
 
     return render(
         request,
@@ -70,7 +62,16 @@ def blog_post(request: HttpRequest, id: int):
     )
 
 
-class BlogPostEditView(PermissionRequiredMixin, View):
+class BlogPosts(ListView):
+    """View for viewing all the blog posts."""
+
+    paginate_by = MAX_BLOG_POSTS_ON_BLOG_PAGE
+    model = BlogPost
+    ordering = ["-published_date"]
+    template_name = "home/blog.html"
+
+
+class EditBlogPost(PermissionRequiredMixin, View):
     """View to edit individual blog post."""
 
     permission_required = "home.can_edit"
@@ -98,7 +99,7 @@ class BlogPostEditView(PermissionRequiredMixin, View):
         return render(request, "home/blog_post_edit.html", {"form": form})
 
 
-class BlogPostDeleteView(PermissionRequiredMixin, View):
+class DeleteBlogPost(PermissionRequiredMixin, View):
     """View to delete individual blog post."""
 
     permission_required = "home.can_remove"
@@ -115,7 +116,7 @@ class BlogPostDeleteView(PermissionRequiredMixin, View):
         return redirect(reverse("blog"))
 
 
-class PublishBlogPostView(PermissionRequiredMixin, View):
+class PublishBlogPost(PermissionRequiredMixin, View):
     """View to publish a new blog post."""
 
     permission_required = "home.can_publish"
