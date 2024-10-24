@@ -35,7 +35,8 @@ def blog_post(request: HttpRequest, id: int):
     """Endpoint for checking an individual blog post."""
     blog_post = get_object_or_404(BlogPost, pk=id)
     paginator = Paginator(
-        BlogPostComment.objects.order_by("-created_date"), BLOG_POST_COMMENTS_PER_PAGE
+        BlogPostComment.objects.filter(blog_post=blog_post).order_by("-created_date"),
+        BLOG_POST_COMMENTS_PER_PAGE,
     )
 
     page = request.GET.get("page", 1)

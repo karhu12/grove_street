@@ -166,7 +166,7 @@ class BlogViewTestCase(TestCase):
 
         extra_comments = 5
         comments = create_blog_post_comments_with_differing_published_date(
-            BLOG_POST_COMMENTS_PER_PAGE + extra_comments, user
+            BLOG_POST_COMMENTS_PER_PAGE + extra_comments, post, user
         )
 
         # Verify page 1 works as intended
