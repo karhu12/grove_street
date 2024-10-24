@@ -68,7 +68,7 @@ def create_blog_posts_with_differing_published_date(count: int) -> list[BlogPost
     Args:
         count: How many blog posts to create.
     Returns:
-        list of created blog posts.
+        list of created blog posts sorted from newest to oldest.
     """
     blog_posts = []
     user = create_test_user()
@@ -87,11 +87,13 @@ def create_blog_posts_with_differing_published_date(count: int) -> list[BlogPost
     blog_posts.sort(key=lambda item: item.published_date, reverse=True)
     return blog_posts
 
+
 def create_blog_post_comment(
     blog_post: Optional[BlogPost] = None,
     user: Optional[User] = None,
     created_date: datetime = now(),
-    content: str = "Content"
+    edited_date: Optional[datetime] = None,
+    content: str = "Content",
 ) -> BlogPostComment:
     """Creates a blog post comment for the given blog post using the given information.
 
@@ -99,6 +101,7 @@ def create_blog_post_comment(
         blog_post: Blog post for which this comment is created for.
         user: Author of the this comment.
         created_date: Datetime when the comment was created.
+        edited_date: Datetime when the comment was edited.
         content: Content of the blog post.
     Returns:
         Created blog post.
@@ -110,6 +113,7 @@ def create_blog_post_comment(
         (blog_post, "blog_post"),
         (user, "author"),
         (created_date, "created_date"),
+        (edited_date, "edited_date"),
         (content, "content"),
     ]:
         if option:
@@ -118,3 +122,36 @@ def create_blog_post_comment(
     comment = BlogPostComment(**options)
     comment.save()
     return comment
+
+
+def create_blog_post_comments_with_differing_published_date(
+    count: int, user: Optional[User] = None
+) -> list[BlogPostComment]:
+    """Creates blog post comments with each of the comment having different published date.
+
+    Args:
+        count: How many blog post comments to create.
+        user: User which the blog post and comments belong to (create new one if not passed).
+    Returns:
+        list of created comments sorted from newest to oldest.
+    """
+    comments = []
+    if not user:
+        user = create_test_user()
+    post = create_blog_post(user)
+
+    current_datetime = now()
+    for i in range(count):
+        # Make sure all comments have different published date (by 1 microsecond)
+        comment = create_blog_post_comment(
+            post,
+            user,
+            created_date=(
+                current_datetime
+                + timedelta(microseconds=current_datetime.microsecond + i)
+            ),
+        )
+        comments.append(comment)
+
+    comments.sort(key=lambda item: item.created_date, reverse=True)
+    return comments
