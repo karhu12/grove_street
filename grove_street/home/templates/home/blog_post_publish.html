@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% if perms.home.can_publish %}
+<h1>New blog post</h1>
+<hr>
+<form action="{% url 'blog_post_publish' %}" method="post" novalidate>
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+{% else %}
+<h1>You do not have permissions to publish new blog post.</h1>
+{% endif %}
+{% endblock %}

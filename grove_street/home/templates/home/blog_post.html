@@ -1,10 +1,63 @@
 {% extends "base.html" %}
 {% load static %}
+{% load home_extras %}
 
 {% block content %}
 <h1>{{ blog_post.title }}</h1>
 <hr>
-<p>{{ blog_post.content }}</p>
-<h5>{{ blog_post.published_date }}</h5>
-<h5>{{ blog_post.author }}</h5>
+<p>{{ blog_post.content|linebreaks }}</p>
+<hr>
+<p>Published: {{ blog_post.published_date }}</p>
+{% if blog_post.edited_date %}
+<p>Last edited: {{ blog_post.edited_date }}</p>
+{% endif %}
+<p>Author: {{ blog_post.author }}</p>
+<h2>Comments</h2>
+{% if request.user.is_authenticated %}
+<form action="{% url "blog_post" blog_post.id %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Send">
+</form>
+{% else %}
+<p>You need to be logged in to leave a comment.</p>
+{% endif %}
+{% if comments %}
+{% for comment in comments %}
+<div class="blog-post-comment-container">
+    <p class="blog-post-comment-author">@{{ comment.author }}</p>
+    <p class="blog-post-comment-created-date">{{ comment.created_date|time_since_date }}</p>
+    <p class="blog-post-comment-content">{{ comment.content }}</p>
+</div>
+{% endfor %}
+{% if comments.has_previous %}
+<a href="{% url "blog_post" blog_post.id %}?page={{ comments.previous_page_number }}">Previous page</a>
+<div class="vertical-line"></div>
+{% endif %}
+<span class="page-number">Page {{ comments.number }}</span>
+{% if comments.has_next %}
+<div class="vertical-line"></div>
+<a href="{% url 'blog_post' id=blog_post.pk %}?page={{ comments.next_page_number }}">Next page</a>
+{% endif%}
+{% else %}
+<p>There are no comments for this blog post yet.</p>
+{% endif %}
+{% if perms.home %}
+<div class="top-right-container">
+    {% if perms.home.can_edit %}
+    <a href="{% url 'blog_post_edit' blog_post.id %}">
+        <button class="icon-button" name="edit" type="button">
+            <img src="{% static 'img/edit.svg' %}"/>
+        </button>
+    </a>
+    {% endif %}
+    {% if perms.home.can_remove %}
+    <a href="{% url 'blog_post_delete' blog_post.id %}">
+        <button class="icon-button" name="delete" type="button">
+            <img src="{% static 'img/delete.svg' %}"/>
+        </button>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
 {% endblock%}
