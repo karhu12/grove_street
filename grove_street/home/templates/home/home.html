@@ -15,15 +15,37 @@
 <hr>
 <h2>Recent blog posts</h2>
 {% if latest_posts %}
-    {% for post in latest_posts %}
-    <a href="{% url 'blog_post' post.id %}">
-        <div class="blog-post-preview-container">
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.published_date }}</p>
-            <p>{{ post.author }}</p>
+{% for post in latest_posts %}
+<a class="link-class" href="{% url 'blog_post' post.id %}">
+    <div class="blog-post-preview-container">
+        <h2>{{ post.title }}</h2>
+        {% if post.edited_date %}
+        <p>Last edited: {{ post.edited_date }}</p>
+        {% else %}
+        <p>Published: {{ post.published_date }}</p>
+        {% endif %}
+        <p>Author: {{ post.author }}</p>
+        {% if perms.home %}
+        <div class="top-right-container">
+            {% if perms.home.can_edit %}
+            <a href="{% url 'blog_post_edit' post.id %}">
+                <button class="icon-button" name="edit" type="button">
+                    <img src="{% static 'img/edit.svg' %}"/>
+                </button>
+            </a>
+            {% endif %}
+            {% if perms.home.can_remove %}
+            <a href="{% url 'blog_post_delete' post.id %}">
+                <button class="icon-button" name="delete" type="button">
+                    <img src="{% static 'img/delete.svg' %}"/>
+                </button>
+            </a>
+            {% endif %}
         </div>
-    </a>
-    {% endfor %}
+        {% endif %}
+    </div>
+</a>
+{% endfor %}
 {% else %}
 <p class="no-blog-posts">No blog posts available!</p>
 {% endif %}

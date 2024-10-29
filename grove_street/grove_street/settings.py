@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -27,11 +28,14 @@ DEBUG = os.environ.get("DEBUG", True)
 
 ALLOWED_HOSTS = []
 
+USE_TZ = True
+
 
 # Application definition
 
 INSTALLED_APPS = [
     "home.apps.HomeConfig",
+    "user_management.apps.UserManagementConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -89,7 +93,9 @@ POSTGRES_READY = (
 )
 
 if not POSTGRES_READY:
-    raise Exception("Database details have not been set (check the environment variables).")
+    raise Exception(
+        "Database details have not been set (check the environment variables)."
+    )
 
 DATABASES = {
     "default": {
@@ -127,7 +133,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Helsinki"
 
 USE_I18N = True
 
@@ -139,11 +145,12 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = "/"

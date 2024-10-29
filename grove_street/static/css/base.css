@@ -2,7 +2,7 @@
 
 :root {
     /* CSS HEX */
-    --primary-color:  rgb(9, 46, 32);
+    --primary-color: rgb(9, 46, 32);
     --secondary-color: rgb(17, 86, 60);
     --accent-1: #9ee493ff;
     --accent-2: rgb(166, 208, 169);
@@ -39,8 +39,10 @@ body {
 
 
 #content {
+    position: relative;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 2em;
     max-width: 1200px;
     width: 100%;
 }
@@ -110,22 +112,34 @@ a:hover {
 }
 
 .blog-posts-preview-container {
+    position: relative;
     margin: 10px 0px;
 }
 
 .blog-post-preview-container {
+    position: relative;
     padding: 5px 10px;
     background: var(--secondary-color);
     color: white;
     border-radius: 10px;
+    margin-bottom: 15px;
 }
 
 .blog-post-preview-container:hover {
     background-color: var(--primary-color);
 }
 
-.blog-post-preview-container h2, p {
-    margin: 4px
+.blog-post-preview-container h2 {
+    color: var(--accent-1);
+    margin: 4px;
+}
+
+.blog-post-preview-container p {
+    margin: 4px;
+}
+
+.blog-post-preview-container-author span {
+    color: var(--accent-2);
 }
 
 .vertical-line {
@@ -141,4 +155,95 @@ a:hover {
 
 .no-blog-posts {
     margin-bottom: 20px;
+}
+
+.log-in-container {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: block;
+}
+
+.log-in-form {
+    margin: 16px;
+}
+
+.table {
+    display: table;
+}
+
+.table-row {
+    display: table-row;
+}
+
+label,
+input {
+    display: table-cell;
+    margin-bottom: 10px;
+}
+
+label {
+    padding-right: 10px;
+}
+
+.top-right-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.icon-button {
+    background-color: var(--secondary-color);
+}
+
+.icon-button:hover {
+    background-color: var(--primary-color);
+    cursor: pointer;
+}
+
+.link-class {
+    display: block;
+}
+
+.row-container {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+}
+
+.blog-post-comment-container {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 1em;
+    vertical-align: middle;
+}
+
+.blog-post-comment-author {
+    margin: 0px;
+    font-weight: bold;
+    color: var(--accent-1);
+    padding: 0.5em;
+    display: inline-block;
+}
+
+.blog-post-comment-content {
+    margin: 0px;
+    padding: 0px 0.5em 0.5em 0.5em;
+}
+
+.blog-post-comment-created-date {
+    margin: 0px;
+    font-style: italic;
+    color: var(--accent-2);
+    padding: 0.5em;
+    padding-left: 0px;
+    display: inline-block;
+}
+
+.comment-form-content {
+    width: 100%;
+    resize: vertical;
 }
