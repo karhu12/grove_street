@@ -12,7 +12,7 @@ from home.models import (
     BlogPost,
     BlogPostComment,
 )
-from home.forms import BlogPostForm
+from home.forms import BlogPostForm, BlogPostCommentForm
 from home.constants import (
     MAX_BLOG_POSTS_ON_HOME_PAGE,
     MAX_BLOG_POSTS_ON_BLOG_PAGE,
@@ -31,36 +31,66 @@ def about(request: HttpRequest):
     return render(request, "home/about.html")
 
 
-def blog_post(request: HttpRequest, id: int):
-    """Endpoint for checking an individual blog post."""
-    blog_post = get_object_or_404(BlogPost, pk=id)
-    paginator = Paginator(
-        BlogPostComment.objects.filter(blog_post=blog_post).order_by("-created_date"),
-        BLOG_POST_COMMENTS_PER_PAGE,
-    )
+class IndividualBlogPost(View):
+    """View for checking an individual blog post."""
 
-    page = request.GET.get("page", 1)
-    comments = paginator.get_page(page)
+    def get(self, request: HttpRequest, id: int, form: BlogPostCommentForm = None):
+        """Endpoint for rendering an individual blog post."""
+        blog_post = get_object_or_404(BlogPost, pk=id)
+        paginator = Paginator(
+            BlogPostComment.objects.filter(blog_post=blog_post).order_by(
+                "-created_date"
+            ),
+            BLOG_POST_COMMENTS_PER_PAGE,
+        )
 
-    page_number = comments.number
-    if not comments.count == 0:
-        if page_number < 1:
-            raise Http404(
-                f"Comments for blog post do not exist on page {comments.number}"
-            )
-        elif page_number > paginator.num_pages:
-            raise Http404(
-                f"Comments for blog post do not exist on page {comments.number}"
-            )
+        page = request.GET.get("page", 1)
+        comments = paginator.get_page(page)
 
-    return render(
-        request,
-        "home/blog_post.html",
-        {
-            "blog_post": blog_post,
-            "comments": comments,
-        },
-    )
+        page_number = comments.number
+        if not comments.count == 0:
+            if page_number < 1:
+                raise Http404(
+                    f"Comments for blog post do not exist on page {comments.number}"
+                )
+            elif page_number > paginator.num_pages:
+                raise Http404(
+                    f"Comments for blog post do not exist on page {comments.number}"
+                )
+
+        if form is None:
+            form = BlogPostCommentForm()
+
+        return render(
+            request,
+            "home/blog_post.html",
+            {
+                "blog_post": blog_post,
+                "comments": comments,
+                "form": form,
+            },
+        )
+
+    def post(self, request: HttpRequest, id: int):
+        """Endpoint for leaving a comment for an inidividual blog post."""
+        form = BlogPostCommentForm(request.POST)
+
+        if not request.user.has_perm("home.can_comment"):
+            form.add_error(None, "User has no permission to post a comment.")
+            return self.get(request, id, form)
+
+        if form.is_valid():
+            content = form.cleaned_data["content"]
+            data = {
+                "blog_post": get_object_or_404(BlogPost, pk=id),
+                "author": request.user,
+                "created_date": now(),
+                "content": content,
+            }
+            comment = BlogPostComment.objects.create(**data)
+            comment.save()
+
+        return self.get(request, id, form)
 
 
 class BlogPosts(ListView):
@@ -77,10 +107,15 @@ class EditBlogPost(PermissionRequiredMixin, View):
 
     permission_required = "home.can_edit"
 
-    def get(self, request: HttpRequest, id: int):
+    def get(self, request: HttpRequest, id: int, form: BlogPostForm | None = None):
         """GET Endpoint for editing an individual blog post."""
         blog_post = get_object_or_404(BlogPost, pk=id)
-        form = BlogPostForm({"title": blog_post.title, "content": blog_post.content})
+
+        if form is None:
+            form = BlogPostForm(
+                {"title": blog_post.title, "content": blog_post.content}
+            )
+
         return render(
             request, "home/blog_post_edit.html", {"blog_post": blog_post, "form": form}
         )
@@ -88,16 +123,28 @@ class EditBlogPost(PermissionRequiredMixin, View):
     def post(self, request: HttpRequest, id: int):
         """POST endpoint for submitting individual blog post edit."""
         form = BlogPostForm(request.POST)
-        post = get_object_or_404(BlogPost, pk=id)
-        if form.is_valid():
+        blog_post = get_object_or_404(BlogPost, pk=id)
+
+        if not request.user.has_perm("home.can_edit"):
+            form.add_error(None, "User has no permission to edit a blog post.")
+            return render(
+                request,
+                "home/blog_post_edit.html",
+                {"blog_post": blog_post, "form": form},
+            )
+
+        if form.is_valid() and request.user.has_perm("home.can_edit"):
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
-            post.title = title
-            post.content = content
-            post.edited_date = now()
-            post.save()
+            blog_post.title = title
+            blog_post.content = content
+            blog_post.edited_date = now()
+            blog_post.save()
             return redirect(reverse("blog_post", args=[id]))
-        return render(request, "home/blog_post_edit.html", {"form": form})
+
+        return render(
+            request, "home/blog_post_edit.html", {"blog_post": blog_post, "form": form}
+        )
 
 
 class DeleteBlogPost(PermissionRequiredMixin, View):
@@ -110,10 +157,11 @@ class DeleteBlogPost(PermissionRequiredMixin, View):
         blog_post = get_object_or_404(BlogPost, pk=id)
         return render(request, "home/blog_post_delete.html", {"blog_post": blog_post})
 
-    def post(self, _: HttpRequest, id: int):
+    def post(self, request: HttpRequest, id: int):
         """POST Endpoint for submitting blog post deletion."""
-        post = get_object_or_404(BlogPost, pk=id)
-        post.delete()
+        if request.user.has_perm("home.can_remove"):
+            post = get_object_or_404(BlogPost, pk=id)
+            post.delete()
         return redirect(reverse("blog"))
 
 
@@ -130,7 +178,7 @@ class PublishBlogPost(PermissionRequiredMixin, View):
     def post(self, request: HttpRequest):
         """POST Endpoint for submitting created blog post."""
         form = BlogPostForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and request.user.has_perm("home.can_publish"):
             data = {
                 "title": form.cleaned_data["title"],
                 "content": form.cleaned_data["content"],

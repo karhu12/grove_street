@@ -2,7 +2,7 @@
 
 :root {
     /* CSS HEX */
-    --primary-color:  rgb(9, 46, 32);
+    --primary-color: rgb(9, 46, 32);
     --secondary-color: rgb(17, 86, 60);
     --accent-1: #9ee493ff;
     --accent-2: rgb(166, 208, 169);
@@ -42,6 +42,7 @@ body {
     position: relative;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 2em;
     max-width: 1200px;
     width: 100%;
 }
@@ -175,7 +176,8 @@ a:hover {
     display: table-row;
 }
 
-label, input {
+label,
+input {
     display: table-cell;
     margin-bottom: 10px;
 }
@@ -224,7 +226,7 @@ label {
     font-weight: bold;
     color: var(--accent-1);
     padding: 0.5em;
-    display:inline-block;
+    display: inline-block;
 }
 
 .blog-post-comment-content {
@@ -239,4 +241,9 @@ label {
     padding: 0.5em;
     padding-left: 0px;
     display: inline-block;
+}
+
+.comment-form-content {
+    width: 100%;
+    resize: vertical;
 }

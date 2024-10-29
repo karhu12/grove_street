@@ -11,7 +11,7 @@ urlpatterns = [
         views.PublishBlogPost.as_view(),
         name="blog_post_publish",
     ),
-    path("blog/post/<int:id>/", views.blog_post, name="blog_post"),
+    path("blog/post/<int:id>/", views.IndividualBlogPost.as_view(), name="blog_post"),
     path(
         "blog/post/<int:id>/edit/",
         views.EditBlogPost.as_view(),

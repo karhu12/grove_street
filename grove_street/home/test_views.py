@@ -12,7 +12,7 @@ from home.constants import (
     MAX_BLOG_POSTS_ON_HOME_PAGE,
     BLOG_POST_COMMENTS_PER_PAGE,
 )
-from home.models import BlogPost
+from home.models import BlogPost, BlogPostComment
 
 
 class HomeViewTestCase(TestCase):
@@ -232,6 +232,57 @@ class BlogViewTestCase(TestCase):
         self.assertEqual(len(post_2.context["comments"]), 1)
         self.assertEqual(post_2.context["comments"][0], comments[1])
 
+    def test_comment_posting_works(self):
+        """Test that posting new comments works as intended."""
+        user = create_test_user(permissions=["can_comment"])
+        self.client.force_login(user)
+        blog_post = create_blog_post(user)
+
+        request = self.client.get(f"/blog/post/{blog_post.pk}/")
+
+        self.assertEqual(len(request.context["comments"]), 0)
+        self.assertEqual(len(BlogPostComment.objects.all()), 0)
+        self.assertContains(request, "There are no comments for this blog post yet.", 1)
+
+        request = self.client.post(
+            f"/blog/post/{blog_post.pk}/", {"content": "test"}, follow=True
+        )
+
+        self.assertEqual(len(request.context["comments"]), 1)
+        self.assertEqual(
+            request.context["comments"][0], BlogPostComment.objects.first()
+        )
+        self.assertContains(request, "blog-post-comment-container", 1)
+
+    def test_comment_post_form_failures(self):
+        """Test sending invalid POST request that should give form error on the rendered site."""
+
+        # Missing permission on user
+        user = create_test_user("has_no_perms")
+        self.client.force_login(user)
+        blog_post = create_blog_post(user)
+
+        request = self.client.post(
+            f"/blog/post/{blog_post.pk}/", {"content": "test"}, follow=True
+        )
+        self.assertContains(request, "User has no permission to post a comment.", 1)
+        self.assertEqual(len(request.context["comments"]), 0)
+
+        self.client.logout()
+
+        # No content
+        user = create_test_user("has_perms", permissions=["can_comment"])
+        self.client.force_login(user)
+        blog_post = create_blog_post(user)
+
+        request = self.client.post(
+            f"/blog/post/{blog_post.pk}/", {"content": ""}, follow=True
+        )
+        self.assertContains(
+            request, '<ul class="errorlist"><li>This field is required.</li></ul>', 1
+        )
+        self.assertEqual(len(request.context["comments"]), 0)
+
 
 class BlogEditViewTestCase(TestCase):
     """Test that '/blog/post/<id>/edit/' view works as intended."""
@@ -285,6 +336,29 @@ class BlogEditViewTestCase(TestCase):
         self.assertEqual(blog_post.content, new_content)
         self.assertNotEqual(blog_post.edited_date, None)
 
+    def test_publish_form_failures(self):
+        """Test that form failures are shown correctly if invalid form is sent."""
+        user = create_test_user(permissions=["can_edit"])
+        self.client.force_login(user)
+        blog_post = create_blog_post(user)
+
+        # No content
+        edit = {"title": "", "content": ""}
+
+        request = self.client.post(
+            f"/blog/post/{blog_post.pk}/edit/",
+            edit,
+            follow=True,
+        )
+        self.assertEqual(len(request.context["form"].errors), 2)
+        self.assertEqual(
+            request.context["form"].errors["title"][0],
+            "This field is required.",
+        )
+        self.assertEqual(
+            request.context["form"].errors["content"][0],
+            "This field is required.",
+        )
 
 class BlogPublishViewTestCase(TestCase):
     """Test that '/blog/posts/publish/' view works as intended."""
