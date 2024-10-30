@@ -76,18 +76,18 @@ WSGI_APPLICATION = "grove_street.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DB = os.environ.get("DB")
-DB_PASSWORD = os.environ.get("DB_PASSWORD")
-DB_USER = os.environ.get("DB_USER")
-DB_HOST = os.environ.get("DB_HOST")
-DB_PORT = os.environ.get("DB_PORT")
+POSTGRES = os.environ.get("POSTGRES_DB")
+POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+POSTGRES_USER = os.environ.get("POSTGRES_USER")
+POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
+POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
 
 POSTGRES_READY = (
-    DB is not None
-    and DB_PASSWORD is not None
-    and DB_USER is not None
-    and DB_HOST is not None
-    and DB_PORT is not None
+    POSTGRES is not None
+    and POSTGRES_PASSWORD is not None
+    and POSTGRES_USER is not None
+    and POSTGRES_HOST is not None
+    and POSTGRES_PORT is not None
 )
 
 if not POSTGRES_READY:
@@ -98,11 +98,11 @@ if not POSTGRES_READY:
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": DB,
-        "USER": DB_USER,
-        "PASSWORD": DB_PASSWORD,
-        "HOST": DB_HOST,
-        "PORT": DB_PORT,
+        "NAME": POSTGRES,
+        "USER": POSTGRES_USER,
+        "PASSWORD": POSTGRES_PASSWORD,
+        "HOST": POSTGRES_HOST,
+        "PORT": POSTGRES_PORT,
     }
 }
 
