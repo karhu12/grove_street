@@ -81,3 +81,7 @@ If you don't have `debugpy` extension, install it.
 ## Test coverage
 
 You can test test coverage using this https://docs.djangoproject.com/en/5.0/topics/testing/advanced/#integration-with-coverage-py
+
+## Running with docker
+
+To start a development server run `docker compose up -d --build` command.
