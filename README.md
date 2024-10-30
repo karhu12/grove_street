@@ -1,30 +1,56 @@
 # grove_street
 Welcome to Grove Street, Home.
 
-## Database setup (Windows)
 
-* Install PostgreSQL (https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
-* Create a new database and an user for it using the `psql` shell.
-* Create a file called `.env` to `/grove_street/`.
-* Modify the contents to match with the created database:
+## Running development server with docker
+
+To start a development server run `docker compose up -d --build` command.
+
+## Running produciton server with docker
+
+To start a production server run `docker-compose -f docker-compose.prod.yml up -d --build` command.
+
+Afterwards you need to manually run the command for migration, as production server does not do it on the entrypoint script.
+
+Migrate database: `docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput`
+
+Collect staticfiles: `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear`
+
+## VSCode debugging setup
+
+You can setup debugging with visual studio code by copying this configuration to `/.vscode/launch.json` (create this path and file if it does not exist).
 
 ```
-DEBUG=True (use False for production)
-POSTGRES_USER=<user>
-POSTGRES_PASSWORD=<password>
-POSTGRES_DB=<db name>
-POSTGRES_PORT=<port number>
-POSTGRES_HOST=<host address>
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Django attach",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 3000
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": ".."
+                }
+            ]
+        },
+    ]
+}
 ```
 
-* .env file is loaded automatically using django-dotenv.
+Using this configuration you can attach to the docker container through port 3000. Note that this is only available in development and not in production.
 
+## Test coverage
 
-You should be able to use the database now.
-
-## Running server
-
-You can run the server by using the manager.py inside the grove_street folder `python manage.py runserver`.
+You can test test coverage using this https://docs.djangoproject.com/en/5.0/topics/testing/advanced/#integration-with-coverage-py
 
 ## Running tests
 
@@ -40,68 +66,3 @@ If the user does not already have this privilege, alter the user to have it.
 ```
 > ALTER USER <username> CREATDB;
 ```
-
-## VSCode debugging setup
-
-You can setup debugging with visual studio by copying this configuration to `/.vscode/launch.json` (create this path and file if they don't exist).
-
-```
-{
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-          "name": "Python Debugger: Django runserver",
-          "type": "debugpy",
-          "request": "launch",
-          "program": "manage.py",
-          "cwd": "${workspaceFolder}\\grove_street",
-          "args": ["runserver"],
-          "django": true,
-          "justMyCode": true
-        },
-        {
-            "name": "Python Debugger: Django test",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "manage.py",
-            "cwd": "${workspaceFolder}\\grove_street",
-            "args": ["test", "--noinput"],
-            "django": true,
-            "justMyCode": true
-          }
-    ]
-}
-```
-
-## VSCode docker container debugging setup
-
-```
-{
-    "name": "Python Debugger: Django attach",
-    "type": "debugpy",
-    "request": "attach",
-    "connect": {
-        "host": "localhost",
-        "port": 3000
-    },
-    "pathMappings": [
-        {
-            "localRoot": "${workspaceFolder}",
-            "remoteRoot": ".."
-        }
-    ]
-},
-```
-
-If you don't have `debugpy` extension, install it.
-
-## Test coverage
-
-You can test test coverage using this https://docs.djangoproject.com/en/5.0/topics/testing/advanced/#integration-with-coverage-py
-
-## Running with docker
-
-To start a development server run `docker compose up -d --build` command.

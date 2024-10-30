@@ -84,8 +84,8 @@ def create_blog_posts_with_differing_published_date(
         blog_post = create_blog_post(
             user,
             published_date=(
-                current_datetime
-                + timedelta(microseconds=current_datetime.microsecond + i)
+                current_datetime +
+                timedelta(microseconds=current_datetime.microsecond + i)
             ),
         )
         blog_posts.append(blog_post)
