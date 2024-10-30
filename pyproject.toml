@@ -9,6 +9,7 @@ dependencies = [
     "Django >= 5.0.4",
     "django-dotenv >= 1.4.2",
     "psycopg[binary] >= 3.2.3",
+    "debugpy>=1.8.7",
 ]
 requires-python = ">=3.12"
 authors = [{ name = "Riku Kaipainen", email = "riku.kaipainen@gmail.com" }]

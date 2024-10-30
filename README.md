@@ -76,6 +76,26 @@ You can setup debugging with visual studio by copying this configuration to `/.v
 }
 ```
 
+## VSCode docker container debugging setup
+
+```
+{
+    "name": "Python Debugger: Django attach",
+    "type": "debugpy",
+    "request": "attach",
+    "connect": {
+        "host": "localhost",
+        "port": 3000
+    },
+    "pathMappings": [
+        {
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": ".."
+        }
+    ]
+},
+```
+
 If you don't have `debugpy` extension, install it.
 
 ## Test coverage
