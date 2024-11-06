@@ -21,9 +21,8 @@ class SignUpView(View):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
             user = User.objects.create_user(username=username, password=password)
-            can_publish_permission = Permission.objects.get(codename="can_publish")
             can_comment_permission = Permission.objects.get(codename="can_comment")
-            user.user_permissions.add(can_publish_permission, can_comment_permission)
+            user.user_permissions.add(can_comment_permission)
             return redirect("sign-up-completed")
 
         return render(request, "user_management/sign_up.html", {"form": form})

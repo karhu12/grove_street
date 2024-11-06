@@ -2,21 +2,10 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-from pathlib import Path
-
-import dotenv
 
 
 def main():
     """Run administrative tasks."""
-
-    # Read .env file from root of the project (or develop file first if it exists)
-    env_paths = ["../.env.dev", "../.env"]
-    for env_path in env_paths:
-        if (path := Path(os.path.abspath(env_path))).exists():
-            dotenv.read_dotenv(path)
-            break
-
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "grove_street.settings")
 
     from django.conf import settings
@@ -25,6 +14,9 @@ def main():
         if os.environ.get('RUN_MAIN') or os.environ.get('WERKZEUG_RUN_MAIN'):
             import debugpy
             debugpy.listen(("0.0.0.0", 3000))
+            if bool(os.environ.get("WAIT_FOR_DEBUGGER", 0)):
+                print("Waiting for debugger")
+                debugpy.wait_for_client()
 
     try:
         from django.core.management import execute_from_command_line

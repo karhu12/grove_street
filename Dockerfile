@@ -15,7 +15,9 @@ RUN apt-get update && apt-get install -y netcat-traditional
 RUN python -m pip install --upgrade pip
 
 # copy project
-COPY . .
+COPY . /usr/src/app
+RUN sed -i 's/\r$//g'  /usr/src/app/entrypoint.sh
+RUN chmod +x  /usr/src/app/entrypoint.sh
 
 # install dependencies
 RUN python -m pip install .

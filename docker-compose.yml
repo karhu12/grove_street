@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
     command: python manage.py runserver 0.0.0.0:8000
     working_dir: /usr/src/app/grove_street/
+    restart: always
     volumes:
       - ./:/usr/src/app/
     ports:

@@ -17,8 +17,10 @@ Example configuration:
 
 ```
 DEBUG=1
+WAIT_FOR_DEBUGGER=0
 SECRET_KEY=foo
-DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1
+DJANGO_TRUSTED_ORIGINS=http://localhost http://127.0.0.1
 POSTGRES_DB=<database name>
 POSTGRES_USER=<username>
 POSTGRES_PASSWORD=<password>
@@ -62,6 +64,8 @@ You can setup debugging with visual studio code by copying this configuration to
 }
 ```
 
+If you want debugger to wait for attach at the start, change the `WAIT_FOR_DEBUGGER` environment option in the `.env.dev` file
+
 ## Running tests
 
 You can run tests on docker container by running `docker-compose run web python manage.py test` command.
@@ -94,8 +98,10 @@ Example configuration:
 
 ```
 DEBUG=0
+WAIT_FOR_DEBUGGER=0
 SECRET_KEY=<generate new secret key>
-DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 <www domain name>
+DJANGO_TRUSTED_ORIGINS=https://localhost https://127.0.0.1 https://<www domain name>
 POSTGRES_DB=<database name>
 POSTGRES_USER=<username>
 POSTGRES_PASSWORD=<password>
@@ -109,4 +115,4 @@ Afterwards you need to manually run the command for migration, as production ser
 * Migrate database `docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput`
 * Collect staticfiles `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear`
 
-Website should be accessible at [https://localhost:80/](https://localhost:80/).
+Website should be accessible at [http://localhost:80/](http://localhost:80/).
