@@ -109,10 +109,16 @@ POSTGRES_HOST=db # refers to database via docker network as defined in docker-co
 POSTGRES_PORT=5432
 ```
 
-After setting up `.env.prod` file you can build and run the project by running `docker-compose -f docker-compose.prod.yml up -d --build` command.
+For the next step you need to set up your SSL certificates. In my case I am running cloudflare DNS which provides origin certificate files (certificate and private key).
+
+Copy certificate and private key to `/etc/ssl/nginx` folder with the name `cert.pem` and `key.pem`.
+
+After setting up SSL certificates and `.env.prod` file, you can build and run the project by running `docker-compose -f docker-compose.prod.yml up -d --build` command.
 
 Afterwards you need to manually run the command for migration, as production server does not do it on the entrypoint script.
 * Migrate database `docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput`
-* Collect staticfiles `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear`
+* Collect static files `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear`
 
-Website should be accessible at [http://localhost:80/](http://localhost:80/).
+These commands should be run when ever there is new migration files added to the version control or new static files.
+
+Website should be accessible at [https://localhost:443/](https://localhost:443/).
