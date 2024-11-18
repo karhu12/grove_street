@@ -25,6 +25,13 @@
 {% if comments %}
 {% for comment in comments %}
 <div class="blog-post-comment-container">
+    {% if perms.home.can_remove %}
+    <a href="{% url 'blog_post_delete' post.id %}">
+        <button class="icon-button" name="delete" type="button">
+            <img src="{% static 'img/delete.svg' %}"/>
+        </button>
+    </a>
+    {% endif %}
     <p class="blog-post-comment-author">@{{ comment.author }}</p>
     <p class="blog-post-comment-created-date">{{ comment.created_date|time_since_date }}</p>
     <p class="blog-post-comment-content">{{ comment.content }}</p>

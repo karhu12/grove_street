@@ -3,6 +3,8 @@
 import os
 import sys
 
+from grove_street.utils import str_to_bool
+
 
 def main():
     """Run administrative tasks."""
@@ -11,10 +13,11 @@ def main():
     from django.conf import settings
 
     if settings.DEBUG:
-        if os.environ.get('RUN_MAIN') or os.environ.get('WERKZEUG_RUN_MAIN'):
+        if os.environ.get("RUN_MAIN") or os.environ.get("WERKZEUG_RUN_MAIN"):
             import debugpy
+
             debugpy.listen(("0.0.0.0", 3000))
-            if bool(os.environ.get("WAIT_FOR_DEBUGGER", 0)):
+            if str_to_bool(os.environ.get("WAIT_FOR_DEBUGGER", 0)):
                 print("Waiting for debugger")
                 debugpy.wait_for_client()
 
