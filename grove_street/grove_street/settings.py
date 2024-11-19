@@ -39,6 +39,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 INSTALLED_APPS = [
     "home.apps.HomeConfig",
+    "about.apps.AboutConfig",
     "user_management.apps.UserManagementConfig",
     "django.contrib.admin",
     "django.contrib.auth",

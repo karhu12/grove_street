@@ -26,11 +26,6 @@ def home(request: HttpRequest):
     return render(request, "home/home.html", {"latest_posts": latest_posts})
 
 
-def about(request: HttpRequest):
-    """Endpoint for viewing information about me."""
-    return render(request, "home/about.html")
-
-
 class IndividualBlogPost(View):
     """View for checking an individual blog post."""
 

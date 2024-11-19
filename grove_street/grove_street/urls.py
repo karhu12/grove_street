@@ -25,6 +25,7 @@ from upload.views import image_upload
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("home.urls")),
+    path("", include("about.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("user-management/", include("user_management.urls")),
     path("upload/", image_upload, name="upload"),
