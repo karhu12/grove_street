@@ -27,16 +27,16 @@
         <p>Published: {{ post.published_date }}</p>
         {% endif %}
         <p>Author: {{ post.author }}</p>
-        {% if perms.home %}
+        {% if perms.blog %}
         <div class="top-right-container">
-            {% if perms.home.can_edit %}
+            {% if perms.blog.can_edit %}
             <a href="{% url 'blog_post_edit' post.id %}">
                 <button class="icon-button" name="edit" type="button">
                     <img src="{% static 'img/edit.svg' %}"/>
                 </button>
             </a>
             {% endif %}
-            {% if perms.home.can_remove %}
+            {% if perms.blog.can_remove %}
             <a href="{% url 'blog_post_delete' post.id %}">
                 <button class="icon-button" name="delete" type="button">
                     <img src="{% static 'img/delete.svg' %}"/>

@@ -3,7 +3,7 @@
 import os
 import sys
 
-from grove_street.utils import str_to_bool
+from utils import str_to_bool
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
             import debugpy
 
             debugpy.listen(("0.0.0.0", 3000))
-            if str_to_bool(os.environ.get("WAIT_FOR_DEBUGGER", 0)):
+            if str_to_bool(os.environ.get("WAIT_FOR_DEBUGGER", "false")):
                 print("Waiting for debugger")
                 debugpy.wait_for_client()
 

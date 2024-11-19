@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.utils.timezone import now
 from django.contrib.auth.models import User, Permission
 
-from home.models import BlogPost, BlogPostComment
+from blog.models import BlogPost, BlogPostComment
 
 
 def create_test_user(

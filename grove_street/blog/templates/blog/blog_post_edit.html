@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-{% if perms.home.can_edit %}
+{% if perms.blog.can_edit %}
 <h1>Editing blog post id {{ blog_post.id }}</h1>
 <hr>
 <form action="{% url 'blog_post_edit' blog_post.id %}" method="post">

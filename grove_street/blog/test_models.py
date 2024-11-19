@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.db.utils import IntegrityError
 from django.utils.timezone import now
 
-from home.test_utils import create_blog_post, create_test_user, create_blog_post_comment
+from test_utils import create_blog_post, create_test_user, create_blog_post_comment
 
 
 class BlogPostTestCase(TestCase):

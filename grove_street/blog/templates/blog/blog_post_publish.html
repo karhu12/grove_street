@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-{% if perms.home.can_publish %}
+{% if perms.blog.can_publish %}
 <h1>New blog post</h1>
 <hr>
 <form action="{% url 'blog_post_publish' %}" method="post" novalidate>
