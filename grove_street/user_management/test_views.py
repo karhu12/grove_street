@@ -17,7 +17,7 @@ class SignUpViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, "/user-management/sign-up-completed/")
         user = User.objects.get(username=user_data["username"])
-        self.assertEqual(user.has_perm("home.can_comment"), True)
+        self.assertEqual(user.has_perm("blog.can_comment"), True)
 
     def test_attempt_create_user_with_existing_username(self):
         """Test that a new user with a username that already exists can not be created."""

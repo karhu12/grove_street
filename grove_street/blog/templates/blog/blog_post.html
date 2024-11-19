@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% load home_extras %}
+{% load blog_extras %}
 
 {% block content %}
 <h1>{{ blog_post.title }}</h1>
@@ -42,16 +42,16 @@
 {% else %}
 <p>There are no comments for this blog post yet.</p>
 {% endif %}
-{% if perms.home %}
+{% if perms.blog %}
 <div class="top-right-container">
-    {% if perms.home.can_edit %}
+    {% if perms.blog.can_edit %}
     <a href="{% url 'blog_post_edit' blog_post.id %}">
         <button class="icon-button" name="edit" type="button">
             <img src="{% static 'img/edit.svg' %}"/>
         </button>
     </a>
     {% endif %}
-    {% if perms.home.can_remove %}
+    {% if perms.blog.can_remove %}
     <a href="{% url 'blog_post_delete' blog_post.id %}">
         <button class="icon-button" name="delete" type="button">
             <img src="{% static 'img/delete.svg' %}"/>

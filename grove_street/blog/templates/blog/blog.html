@@ -4,7 +4,7 @@
 {% block content %}
 <div class="row-container">
     <h1 style="display: inline-block;">Blog posts</h1>
-    {% if perms.home.can_publish %}
+    {% if perms.blog.can_publish %}
     <a href="{% url 'blog_post_publish' %}">
         <button class="icon-button" name="add" type="button">
             <img src="{% static 'img/add.svg' %}"/>
@@ -24,16 +24,16 @@
             <p>Published: {{ post.published_date }}</p>
             {% endif %}
             <p>Author: <span class="accent-2">{{ post.author }}</span></p>
-            {% if perms.home %}
+            {% if perms.blog %}
             <div class="top-right-container">
-                {% if perms.home.can_edit %}
+                {% if perms.blog.can_edit %}
                 <a href="{% url 'blog_post_edit' post.id %}">
                     <button class="icon-button" name="edit" type="button">
                         <img src="{% static 'img/edit.svg' %}"/>
                     </button>
                 </a>
                 {% endif %}
-                {% if perms.home.can_remove %}
+                {% if perms.blog.can_remove %}
                 <a href="{% url 'blog_post_delete' post.id %}">
                     <button class="icon-button" name="delete" type="button">
                         <img src="{% static 'img/delete.svg' %}"/>

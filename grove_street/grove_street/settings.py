@@ -39,6 +39,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 INSTALLED_APPS = [
     "home.apps.HomeConfig",
+    "blog.apps.BlogConfig",
     "about.apps.AboutConfig",
     "user_management.apps.UserManagementConfig",
     "django.contrib.admin",
@@ -91,11 +92,11 @@ POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
 
 POSTGRES_READY = (
-    POSTGRES is not None and
-    POSTGRES_PASSWORD is not None and
-    POSTGRES_USER is not None and
-    POSTGRES_HOST is not None and
-    POSTGRES_PORT is not None
+    POSTGRES is not None
+    and POSTGRES_PASSWORD is not None
+    and POSTGRES_USER is not None
+    and POSTGRES_HOST is not None
+    and POSTGRES_PORT is not None
 )
 
 if not POSTGRES_READY:
