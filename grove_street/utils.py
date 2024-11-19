@@ -1,6 +1,3 @@
-import os
-
-
 def str_to_bool(variable: str) -> bool:
     """Convert string variable to boolean.
 
