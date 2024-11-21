@@ -294,11 +294,16 @@ label {
     height: 100%;
 }
 
+.about-page-description-content h1 {
+    margin-top: 0px;
+}
+
 .about-page-description-left {
     display: flex;
     flex-shrink: 0;
     flex-direction: column;
     height: min-content;
+    gap: 1em;
 }
 
 .about-page-description-right {
@@ -313,7 +318,6 @@ label {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    margin-bottom: 1em;
 }
 
 .about-page-description-headers h1 {
@@ -331,6 +335,11 @@ label {
     color: #a6d0a9;
 }
 
+.about-page-description-headers p {
+    margin: 0px;
+    margin-top: 1em;
+}
+
 .round-icon-container {
     display: flex;
     align-items: center;
@@ -339,7 +348,6 @@ label {
     width: 200px;
     border-radius: 50%;
     overflow: hidden;
-    margin-bottom: 1em;
 }
 
 .card-shadow {
@@ -352,20 +360,24 @@ label {
 }
 
 .about-page-experience {
+    align-items: center;
     padding: 2em;
     display: flex;
+    flex-direction: column;
     background-color: #11563c;
     color: #9ee493ff;
-    gap: 2em;
+    gap: 1em;
 }
 
 .about-page-expertise {
+    align-items: center;
     flex: 1;
     display: flex;
+    flex-direction: column;
     padding: 2em;
     background-color: #092e20;
     color: #9ee493ff;
-    gap: 2em;
+    gap: 1em;
 }
 
 .flex-row {
@@ -374,4 +386,137 @@ label {
 
 .flex-column {
     flex-direction: column;
+}
+
+.justify-left {
+    justify-content: left;
+}
+
+.justify-right {
+    justify-content: right;
+}
+
+.experience-container {
+    display: flex;
+    width: 100%;
+}
+
+.experience-timeline-container {
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: min-content;
+}
+
+.experience-year-highlight {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #9ee493ff;
+    align-items: center;
+    z-index: 1;
+}
+
+.experience-year-highlight-text {
+    position: relative;
+    right: -60px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.experience-year-highlight-text div {
+    font-weight: 300;
+    color: #9ee493ff;
+}
+
+.experience-year-timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 10px;
+    height: 815px;
+    background-color: #092e20;
+    margin-top: -5px;
+    margin-bottom: -5px;
+    z-index: 0;
+    gap: 40px;
+}
+
+.experience-month-highlight {
+    display: flex;
+    flex-shrink: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #9ee493ff;
+    align-items: center;
+    z-index: 1;
+}
+
+.experience-month-highlight:nth-child(1) {
+    display: flex;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #9ee493ff;
+    align-items: center;
+    z-index: 1;
+    margin-top: 45px;
+}
+
+.experience-month-highlight-text {
+    position: relative;
+    right: -40px;
+    font-weight: 300;
+    color: #9ee493ff;
+}
+
+.experience-items {
+    position: relative;
+    flex: 1;
+}
+
+.work-experience-item {
+    position: absolute;
+    height: 50px;
+    padding-left: 1em;
+    padding-right: 1em;
+    background-color: #092e20;
+    top: 90px;
+    border-radius: 5px;
+    right: 0;
+}
+
+.work-experience-item h3 {
+    margin: 0px;
+}
+
+.work-experience-item h6 {
+    margin: 0px;
+    font-style: italic;
+    font-weight: 300;
+}
+
+.work-experience-item:nth-child(2) {
+    position: absolute;
+    height: 50px;
+    padding-left: 1em;
+    padding-right: 1em;
+    background-color: #092e20;
+    top: 155px;
+    border-radius: 5px;
+    right: 0;
+}
+
+.work-experience-item:nth-child(3) {
+    position: absolute;
+    height: 155px;
+    padding-left: 1em;
+    padding-right: 1em;
+    background-color: #092e20;
+    top: 220px;
+    border-radius: 5px;
+    right: 0;
 }
