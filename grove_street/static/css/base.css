@@ -37,12 +37,18 @@ body {
     font-style: normal;
 }
 
+hr {
+    width: 100%;
+}
 
 #content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     position: relative;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 2em;
+    margin-bottom: auto;
     max-width: 1200px;
     width: 100%;
 }
@@ -85,10 +91,9 @@ body {
 }
 
 #footer {
-    background-color: var(--primary-color);
+    background-color: #11563c;
     color: white;
     padding: 10px;
-    margin-top: auto;
 }
 
 #footer-content {
@@ -251,6 +256,7 @@ label {
 .about-page {
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 
 .about-page-description {
@@ -364,4 +370,12 @@ label {
     background-color: #092e20;
     color: #9ee493ff;
     gap: 2em;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-column {
+    flex-direction: column;
 }
