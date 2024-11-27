@@ -6,6 +6,7 @@ from django.utils.timezone import now
 from django.contrib.auth.models import User, Permission
 
 from blog.models import BlogPost, BlogPostComment
+from about.models import ExperienceItem
 
 
 def create_test_user(
@@ -32,6 +33,7 @@ def create_test_user(
 def create_blog_post(
     user: Optional[User] = None,
     published_date: datetime = now(),
+    edited_date: datetime | None = None,
     title: str = "Title",
     content: str = "Content",
 ) -> BlogPost:
@@ -40,6 +42,7 @@ def create_blog_post(
     Args:
         user: Author of the blog post.
         published_date: Datetime when the blog post was published.
+        edited_date: Datetime when the blog post was edited.
         title: Title of the blog post.
         content: Content of the blog post.
     Returns:
@@ -51,10 +54,11 @@ def create_blog_post(
     for option, option_name in [
         (user, "author"),
         (published_date, "published_date"),
+        (edited_date, "edited_date"),
         (title, "title"),
         (content, "content"),
     ]:
-        if option:
+        if option is not None:
             options[option_name] = option
 
     blog_post = BlogPost(**options)
@@ -84,8 +88,8 @@ def create_blog_posts_with_differing_published_date(
         blog_post = create_blog_post(
             user,
             published_date=(
-                current_datetime +
-                timedelta(microseconds=current_datetime.microsecond + i)
+                current_datetime
+                + timedelta(microseconds=current_datetime.microsecond + i)
             ),
         )
         blog_posts.append(blog_post)
@@ -161,3 +165,42 @@ def create_blog_post_comments_with_differing_published_date(
 
     comments.sort(key=lambda item: item.created_date, reverse=True)
     return comments
+
+
+def create_experience_item(
+    title: str = "Title",
+    role: str = "Role",
+    description: str = "Description",
+    start_date: datetime = now(),
+    end_date: datetime | None = None,
+    category: str = "Work",
+) -> ExperienceItem:
+    """Creates and saves new experience item with given arguments to the database.
+
+    Args:
+        title: Title of the experience.
+        role: Role of the experience.
+        description: Description of the experience.
+        start_date: When the experience started.
+        end_date: When the experience ended (empty if the experience is still present).
+        category: What type of experience it was (e.g. Work / Education).
+    Returns:
+        Created experience item.
+    Raises:
+        IntegrityError: Saving experience item failed.
+    """
+    options = {}
+    for option, option_name in [
+        (title, "title"),
+        (role, "role"),
+        (description, "description"),
+        (start_date, "start_date"),
+        (end_date, "end_date"),
+        (category, "category"),
+    ]:
+        if option:
+            options[option_name] = option
+
+    item = ExperienceItem(**options)
+    item.save()
+    return item

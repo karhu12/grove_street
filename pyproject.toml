@@ -8,6 +8,7 @@ version = "0.0.1"
 dependencies = [
     "Django >= 5.0.4",
     "psycopg[binary] >= 3.2.3",
+    "pytest-django >= 4.9.0",
     "debugpy>=1.8.7",
     "gunicorn>=23.0.0",
 ]

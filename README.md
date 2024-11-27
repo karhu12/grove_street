@@ -30,7 +30,8 @@ POSTGRES_PORT=5432
 
 After setting up `.env.dev` file you can build and run the project by running `docker compose up -d --build` command.
 
-Development container automatically flushes the database and runs migrations when container is first created so the website should be up and running if no errors occured.
+Afterwards you need to manually run the command for migration if not done before, as development server does not do it automatically.
+* Migrate database `docker-compose exec web python manage.py migrate`
 
 Website should be accessible at [https://localhost:8000/](https://localhost:8000/) and the container reacts to code changes in the local repository so it can be used for development as is.
 
@@ -66,9 +67,11 @@ You can setup debugging with visual studio code by copying this configuration to
 
 If you want debugger to wait for attach at the start, change the `WAIT_FOR_DEBUGGER` environment option in the `.env.dev` file
 
+Using this configuration you can attach to the docker container through port 3000. Note that this is only available in development and not in production.
+
 ## Running tests
 
-You can run tests on docker container by running `docker-compose run web python manage.py test` command.
+You can run tests on docker container by running `docker-compose exec web pytest` command.
 
 Running tests requires for the database user to have CREATEDB privilege.
 If the user does not already have this privilege, alter the user to have it.
@@ -80,11 +83,18 @@ If the user does not already have this privilege, alter the user to have it.
 > ALTER USER <username> CREATDB;
 ```
 
-Using this configuration you can attach to the docker container through port 3000. Note that this is only available in development and not in production.
-
 ## Test coverage
 
-You can test test coverage using this https://docs.djangoproject.com/en/5.0/topics/testing/advanced/#integration-with-coverage-py
+You can test test coverage using this https://docs.djangoproject.com/en/5.0/topics/testing/advanced/#integration-with-coverage-py¨
+
+## Debugging test cases
+
+Test cases can be debugged in a similar way to main project.
+
+Copy the `launch.json` configuration attach debugging, and rename it. You only need to change port from `3000` to `3001`, which is test specific debugger port.
+
+After the modification run the tests with the following modification `docker-compose exec web pytest --wait-for-debugger`. The test cases are not run until a debugger is attached on port `3001`.
+
 
 ## Running with docker in production
 
@@ -115,8 +125,8 @@ Copy certificate and private key to `/etc/ssl/nginx` folder with the name `cert.
 
 After setting up SSL certificates and `.env.prod` file, you can build and run the project by running `docker-compose -f docker-compose.prod.yml up -d --build` command.
 
-Afterwards you need to manually run the command for migration, as production server does not do it on the entrypoint script.
-* Migrate database `docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput`
+Afterwards you need to manually run the command for migration and collecting static files, as production server does not do it automatically.
+* Migrate database `docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --no-input`
 * Collect static files `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear`
 
 These commands should be run when ever there is new migration files added to the version control or new static files.
