@@ -480,13 +480,11 @@ label {
 
 .work-experience-item {
     position: absolute;
-    height: 50px;
     padding-left: 1em;
     padding-right: 1em;
     background-color: #092e20;
-    top: 90px;
     border-radius: 5px;
-    right: 0;
+    right: 10px;
 }
 
 .work-experience-item h3 {
@@ -497,28 +495,6 @@ label {
     margin: 0px;
     font-style: italic;
     font-weight: 300;
-}
-
-.work-experience-item:nth-child(2) {
-    position: absolute;
-    height: 50px;
-    padding-left: 1em;
-    padding-right: 1em;
-    background-color: #092e20;
-    top: 155px;
-    border-radius: 5px;
-    right: 0;
-}
-
-.work-experience-item:nth-child(3) {
-    position: absolute;
-    height: 155px;
-    padding-left: 1em;
-    padding-right: 1em;
-    background-color: #092e20;
-    top: 220px;
-    border-radius: 5px;
-    right: 0;
 }
 
 .expertise-items {

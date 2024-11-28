@@ -1,7 +1,45 @@
 from django.shortcuts import render
 from django.http import HttpRequest
+from django.utils.timezone import now
+from about.models import ExperienceItem
+from about.ui import calculate_item_placement_on_timeline, Month
 
 
 def about(request: HttpRequest):
     """Endpoint for viewing the about page of the website."""
-    return render(request, "about/about.html")
+    experience_items_query = ExperienceItem.objects.order_by("-end_date")
+
+    experience_items = []
+
+    if experience_items_query:
+        first = experience_items_query.first()
+        if first.end_date is None:
+            latest_year = now().year
+        else:
+            latest_year = first.end_date.year
+
+        oldest_date = experience_items_query.latest("-start_date").start_date
+        for item in experience_items_query:
+            experience_items.append(
+                {
+                    "placement": calculate_item_placement_on_timeline(item, latest_year),
+                    "item": item,
+                }
+            )
+
+        if oldest_date.month == Month.DECEMBER.value:
+            experience_range = range(latest_year, oldest_date.year, -1)
+        else:
+            experience_range = range(latest_year, oldest_date.year - 1, -1)
+        end_year = experience_range[-1] - 1
+    else:
+        experience_range = None
+        end_year = None
+
+    context = {
+        "experience_range": experience_range,
+        "experience_items": experience_items,
+        "end_year": end_year
+    }
+
+    return render(request, "about/about.html", context)

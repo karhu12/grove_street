@@ -72,26 +72,22 @@
     </div>
     <div class="about-page-experience">
         <h1>Experience</h1>
+        {% if experience_items %}
         <div class="experience-container">
             <!-- Experience items on the left side of the timeline. -->
             <div class="experience-items justify-right">
-                <div class="work-experience-item card-shadow">
-                    <h3>Software Engineer</h3>
-                    <h6>OptoFidelity</h6>
+                {% for experience in experience_items %}
+                <div style="top: {{ experience.placement.top }}px; height: {{ experience.placement.height }}px" class="work-experience-item card-shadow">
+                    <h3>{{ experience.item.title }}</h3>
+                    <h6>{{ experience.item.role }}</h6>
                 </div>
-                <div class="work-experience-item card-shadow">
-                    <h3>Software Engineer</h3>
-                    <h6>OptoFidelity</h6>
-                </div>
-                <div class="work-experience-item card-shadow">
-                    <h3>Software Engineer</h3>
-                    <h6>OptoFidelity</h6>
-                </div>
+                {% endfor %}
             </div>
             <div class="experience-timeline-container">
+                {% for year in experience_range %}
                 <div class="experience-year-highlight card-shadow">
                     <div style="display: flex; flex-direction: column;">
-                        <h1 class="experience-year-highlight-text">2024</h1>
+                        <h1 class="experience-year-highlight-text">{{ year }}</h1>
                         <div class="experience-year-highlight-text">December</div>
                     </div>
                 </div>
@@ -130,9 +126,10 @@
                         <div class="experience-month-highlight-text">January</div>
                     </div>
                 </div>
+                {% endfor %}
                 <div class="experience-year-highlight card-shadow">
                     <div style="display: flex; flex-direction: column;">
-                        <h1 class="experience-year-highlight-text">2023</h1>
+                        <h1 class="experience-year-highlight-text">{{ end_year }}</h1>
                         <div class="experience-year-highlight-text">December</div>
                     </div>
                 </div>
@@ -142,6 +139,9 @@
 
             </div>
         </div>
+        {% else %}
+        <p>No experience items available.</p>
+        {% endif%}
     </div>
     <div class="about-page-expertise">
         <h1>Expertise</h1>
