@@ -30,12 +30,22 @@ class ExperienceItem(models.Model):
         ]
 
 
-def is_present_experience(item: ExperienceItem) -> bool:
-    """Check if the experience is present in the given experience item.
+class ExpertiseItem(models.Model):
+    """Model that represents expertise in specific category (programming language, framework, etc.)."""
 
-    Args:
-        item: Experience item to check.
-    Returns:
-        Is present experience.
-    """
-    return item.end_date is None
+    title = models.CharField("Title", max_length=100)
+    category = models.CharField("Category", max_length=100)
+    experience_months = models.IntegerField("Experience months")
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=(~models.Q(title="")), name="expertise_item_title_populated"
+            ),
+            models.CheckConstraint(
+                condition=(~models.Q(category="")), name="expertise_item_category_populated"
+            ),
+            models.CheckConstraint(
+                condition=(models.Q(experience_months__gt=0)), name="expertise_item_has_non_zero_experience"
+            )
+        ]

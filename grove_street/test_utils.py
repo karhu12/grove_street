@@ -6,7 +6,7 @@ from django.utils.timezone import now
 from django.contrib.auth.models import User, Permission
 
 from blog.models import BlogPost, BlogPostComment
-from about.models import ExperienceItem
+from about.models import ExperienceItem, ExpertiseItem
 
 
 def create_test_user(
@@ -202,5 +202,35 @@ def create_experience_item(
             options[option_name] = option
 
     item = ExperienceItem(**options)
+    item.save()
+    return item
+
+
+def create_expertise_item(
+    title: str = "Title",
+    category: str = "Work",
+    experience_months: int = 1,
+) -> ExpertiseItem:
+    """Creates and saves new expertise item with given arguments to the database.
+
+    Args:
+        title: Title of the expertise.
+        category: What type of expertise it was (e.g. Programming Language / Framwork).
+        experience_months: How many months have you worked with the expertise.
+    Returns:
+        Created expertise item.
+    Raises:
+        IntegrityError: Saving expertise item failed.
+    """
+    options = {}
+    for option, option_name in [
+        (title, "title"),
+        (category, "category"),
+        (experience_months, "experience_months")
+    ]:
+        if option:
+            options[option_name] = option
+
+    item = ExpertiseItem(**options)
     item.save()
     return item
