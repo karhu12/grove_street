@@ -100,13 +100,15 @@ def calculate_item_placement_on_timeline(
                     + MONTH_MARKER
                 )
         else:
-            if end_month != Month.DECEMBER.value:
+            if start_year == end_year and start_month == end_month:
+                height = MONTH_EXPERIENCE
+            elif end_month != Month.DECEMBER.value:
                 month_diff = end_month - start_month
                 height += month_diff * (MONTH_MARKER + GAP) + MONTH_MARKER
             else:
                 month_diff = end_month - start_month
                 height += (
-                    YEAR_MARKER + GAP + month_diff * (MONTH_MARKER + GAP) + MONTH_MARKER
+                    YEAR_MARKER + month_diff * (MONTH_MARKER + GAP)
                 )
 
         return height
@@ -118,19 +120,11 @@ def calculate_item_placement_on_timeline(
         end_date = item.end_date
 
     top = calculate_top(end_date.year, end_date.month)
-
-
-    if (
-        item.start_date.year == end_date.year
-        and item.start_date.month == end_date.month
-    ):
-        height = MONTH_EXPERIENCE
-    else:
-        height = calculate_height(
-            item.start_date.year,
-            item.start_date.month,
-            end_date.year,
-            end_date.month,
-        )
+    height = calculate_height(
+        item.start_date.year,
+        item.start_date.month,
+        end_date.year,
+        end_date.month,
+    )
 
     return ItemPosition(top, height)

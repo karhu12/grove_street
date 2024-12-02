@@ -26,8 +26,9 @@ def about(request: HttpRequest):
                     "item": item,
                 }
             )
-
-        if oldest_date.month == Month.DECEMBER.value:
+        if latest_year == oldest_date.year:
+            experience_range = range(latest_year, latest_year - 1, -1)
+        elif oldest_date.month == Month.DECEMBER.value:
             experience_range = range(latest_year, oldest_date.year, -1)
         else:
             experience_range = range(latest_year, oldest_date.year - 1, -1)
