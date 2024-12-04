@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load about_extras %}
 
 {% block content %}
 <div class="about-page">
@@ -156,7 +157,7 @@
                     {% for item in items %}
                     <div class="expertise-item-content-row">
                         <p class="expertise-item-content-row-title">{{ item.title}}</p>
-                        <p class="expertise-item-content-row-experience">{{ item.experience_months }}</p>
+                        <p class="expertise-item-content-row-experience">{{ item.experience_months|user_friendly_months }}</p>
                     </div>
                     {% endfor %}
                 </div>

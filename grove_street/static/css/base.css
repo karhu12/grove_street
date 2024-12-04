@@ -511,6 +511,8 @@ label {
 }
 
 .expertise-item-header {
+    display: flex;
+    justify-content: center;
     color:#9ee493ff;
     background-color: #11563c;
     padding: 1em;
