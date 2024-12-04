@@ -146,25 +146,25 @@
     <div class="about-page-expertise">
         <h1>Expertise</h1>
         <div class="expertise-items">
+            {% if categorized_expertise_items %}
+            {% for category, items in categorized_expertise_items.items %}
             <div class="expertise-item">
                 <div class="expertise-item-header">
-                    <p>Programming languages</p>
+                    <p>{{ category }}</p>
                 </div>
                 <div class="expertise-item-content">
+                    {% for item in items %}
                     <div class="expertise-item-content-row">
-                        <p class="expertise-item-content-row-title">Python</p>
-                        <p class="expertise-item-content-row-experience">5 years</p>
+                        <p class="expertise-item-content-row-title">{{ item.title}}</p>
+                        <p class="expertise-item-content-row-experience">{{ item.experience_months }}</p>
                     </div>
-                    <div class="expertise-item-content-row">
-                        <p class="expertise-item-content-row-title">C++</p>
-                        <p class="expertise-item-content-row-experience">1 year</p>
-                    </div>
-                    <div class="expertise-item-content-row">
-                        <p class="expertise-item-content-row-title">C</p>
-                        <p class="expertise-item-content-row-experience">1 year</p>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
+            {% endfor %}
+            {% else %}
+            <p>No expertise items available.</p>
+            {% endif %}
         </div>
     </div>
 </div>

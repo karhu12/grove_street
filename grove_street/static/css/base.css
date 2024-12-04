@@ -500,6 +500,9 @@ label {
 .expertise-items {
     display: flex;
     flex: 1;
+    gap: 1em;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .expertise-item {

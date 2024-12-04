@@ -6,7 +6,7 @@ from about.models import ExperienceItem
 
 
 @dataclass
-class ItemPosition:
+class ItemPlacement:
     """Describes an absolute item positioned on experience timeline."""
 
     top: int
@@ -43,7 +43,7 @@ MONTH_EXPERIENCE = 50
 
 def calculate_item_placement_on_timeline(
     item: ExperienceItem, latest_year: int
-) -> ItemPosition:
+) -> ItemPlacement:
     """Calculates ExperienceItem's position on experience timeline based on start and end date.
 
     Timeline is formed programmatically in following way:
@@ -127,4 +127,4 @@ def calculate_item_placement_on_timeline(
         end_date.month,
     )
 
-    return ItemPosition(top, height)
+    return ItemPlacement(top, height)

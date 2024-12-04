@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpRequest
 from django.utils.timezone import now
-from about.models import ExperienceItem
+from about.models import ExperienceItem, ExpertiseItem
 from about.ui import calculate_item_placement_on_timeline, Month
 
 
@@ -37,9 +37,19 @@ def about(request: HttpRequest):
         experience_range = None
         end_year = None
 
+    expertise_items_query = ExpertiseItem.objects.all()
+
+    categorized_expertise_items = {}
+    if experience_items_query:
+        for item in expertise_items_query:
+            if item.category not in categorized_expertise_items:
+                categorized_expertise_items[item.category] = []
+            categorized_expertise_items[item.category].append(item)
+
     context = {
         "experience_range": experience_range,
         "experience_items": experience_items,
+        "categorized_expertise_items": categorized_expertise_items,
         "end_year": end_year
     }
 
