@@ -6,6 +6,9 @@
     --secondary-color: #11563c;
     --accent-1: #9ee493ff;
     --accent-2: #a6d0a9;
+    --dark-red: #311b1c;
+    --dark-purple: #241135;
+    --dark-yellow: #2b281a;
 }
 
 .primary-color {
@@ -91,7 +94,7 @@ hr {
 }
 
 #footer {
-    background-color: #11563c;
+    background-color: var(--secondary-color);
     color: white;
     padding: 10px;
 }
@@ -262,8 +265,8 @@ label {
 .about-page-description {
     padding: 2em;
     display: flex;
-    background-color: #092e20;
-    color: #9ee493ff;
+    background-color: var(--primary-color);
+    color: var(--accent-1);
     gap: 2em;
 }
 
@@ -277,13 +280,13 @@ label {
 
 .about-page-description-left p {
     font-weight: 300;
-    color: #a6d0a9;
+    color: var(--accent-2);
     margin: 0px;
 }
 
 .about-page-description-right p {
     font-weight: 400;
-    color: #a6d0a9;
+    color: var(--accent-2);
 }
 
 .about-page-description-content {
@@ -323,7 +326,7 @@ label {
 .about-page-description-headers h1 {
     margin: 0px;
     height: min-content;
-    color: #9ee493ff;
+    color: var(--accent-1);
 }
 
 
@@ -332,7 +335,7 @@ label {
     height: min-content;
     font-style: italic;
     font-weight: 100;
-    color: #a6d0a9;
+    color: var(--accent-2);
 }
 
 .about-page-description-headers p {
@@ -364,8 +367,8 @@ label {
     padding: 2em;
     display: flex;
     flex-direction: column;
-    background-color: #11563c;
-    color: #9ee493ff;
+    background-color: var(--secondary-color);
+    color: var(--accent-1);
     gap: 1em;
 }
 
@@ -375,8 +378,8 @@ label {
     display: flex;
     flex-direction: column;
     padding: 2em;
-    background-color: #092e20;
-    color: #9ee493ff;
+    background-color: var(--primary-color);
+    color: var(--accent-1);
     gap: 1em;
 }
 
@@ -414,7 +417,7 @@ label {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #9ee493ff;
+    background-color: var(--accent-1);
     align-items: center;
     z-index: 1;
 }
@@ -428,7 +431,7 @@ label {
 
 .experience-year-highlight-text div {
     font-weight: 300;
-    color: #9ee493ff;
+    color: var(--accent-1);
 }
 
 .experience-year-timeline {
@@ -437,7 +440,7 @@ label {
     align-items: center;
     width: 10px;
     height: 765px;
-    background-color: #092e20;
+    background-color: var(--primary-color);
     margin-top: -5px;
     margin-bottom: -5px;
     z-index: 0;
@@ -450,7 +453,7 @@ label {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background-color: #9ee493ff;
+    background-color: var(--accent-1);
     align-items: center;
     z-index: 1;
 }
@@ -460,7 +463,7 @@ label {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background-color: #9ee493ff;
+    background-color: var(--accent-1);
     align-items: center;
     z-index: 1;
     margin-top: 45px;
@@ -470,7 +473,7 @@ label {
     position: relative;
     right: -40px;
     font-weight: 300;
-    color: #9ee493ff;
+    color: var(--accent-1);
 }
 
 .experience-items {
@@ -478,23 +481,46 @@ label {
     flex: 1;
 }
 
-.work-experience-item {
+.left-experience-item {
     position: absolute;
     padding-left: 1em;
     padding-right: 1em;
-    background-color: #092e20;
     border-radius: 5px;
     right: 10px;
 }
 
-.work-experience-item h3 {
+.experience-item-role {
     margin: 0px;
 }
 
-.work-experience-item h6 {
+.experience-item-title {
     margin: 0px;
     font-style: italic;
     font-weight: 300;
+}
+
+.right-experience-item {
+    position: absolute;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-radius: 5px;
+    left: 100px;
+}
+
+.work-item {
+    background-color: var(--primary-color);
+}
+
+.education-item {
+    background-color: var(--dark-purple);
+}
+
+.project-item {
+    background-color: var(--dark-yellow);
+}
+
+.other-item {
+    background-color: var(--dark-yellow);
 }
 
 .expertise-items {
@@ -513,8 +539,8 @@ label {
 .expertise-item-header {
     display: flex;
     justify-content: center;
-    color:#9ee493ff;
-    background-color: #11563c;
+    color: var(--accent-1);
+    background-color: var(--secondary-color);
     padding: 1em;
     border-radius: 10px 10px 0 0;
 }
@@ -525,7 +551,7 @@ label {
 
 .expertise-item-content {
     color:#092e20;
-    background-color: #9ee493ff;
+    background-color: var(--accent-1);
     padding: 1em;
     border-radius: 0 0 10px 10px;
 }
@@ -545,4 +571,23 @@ label {
 
 .expertise-item-content-row-experience {
     flex-shrink: 1;
+}
+
+.experience-categories {
+    display: flex;
+}
+
+.experience-category {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.experience-category-color-marker {
+    width: 15px;
+    height: 15px;
+}
+
+.no-margin {
+    margin: 0px;
 }

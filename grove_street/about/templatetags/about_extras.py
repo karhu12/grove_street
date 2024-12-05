@@ -22,7 +22,24 @@ def user_friendly_months(months: int) -> str:
     Returns:
         String representation of the months in clear format.
     """
+
     if months < 12:
         return f"{months} Month{"s" if months > 1 else ""}"
     years = int(months // 12)
     return f"{years} Year{"s" if years > 1 else ""}"
+
+
+@register.filter(name="get_category_class")
+def get_category_class(category: str) -> str:
+    """Returns class name for the given category."""
+
+    category_classes = {
+        "work": "work-item",
+        "education": "education-item",
+        "project": "project-item",
+    }
+
+    category_lower = category.lower()
+    if category_lower in category_classes:
+        return category_classes[category_lower]
+    return "other-item"

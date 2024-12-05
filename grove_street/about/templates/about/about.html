@@ -73,14 +73,21 @@
     </div>
     <div class="about-page-experience">
         <h1>Experience</h1>
-        {% if experience_items %}
+        {% if work_experience_items or non_work_experience_items %}
+        <div class="experience-categories">
+            {% for category in experience_item_categories %}
+            <div class="experience-category">
+                <div class="{{ category|get_category_class }} experience-category-color-marker"></div>
+                <label class="no-margin">{{ category }}</label>
+            </div>
+            {% endfor %}
+        </div>
         <div class="experience-container">
-            <!-- Experience items on the left side of the timeline. -->
             <div class="experience-items justify-right">
-                {% for experience in experience_items %}
-                <div style="top: {{ experience.placement.top }}px; height: {{ experience.placement.height }}px" class="work-experience-item card-shadow">
-                    <h3>{{ experience.item.title }}</h3>
-                    <h6>{{ experience.item.role }}</h6>
+                {% for experience in work_experience_items %}
+                <div style="top: {{ experience.placement.top }}px; height: {{ experience.placement.height }}px" class="{{ experience.item.category|get_category_class }} left-experience-item card-shadow">
+                    <h3 class="experience-item-role">{{ experience.item.role }}</h6>
+                    <h6 class="experience-item-title">{{ experience.item.title }}</h3>
                 </div>
                 {% endfor %}
             </div>
@@ -135,9 +142,13 @@
                     </div>
                 </div>
             </div>
-            <!-- Experience items on the right side of the timeline. -->
             <div class="experience-items">
-
+                {% for experience in non_work_experience_items %}
+                <div style="top: {{ experience.placement.top }}px; height: {{ experience.placement.height }}px" class="{{ experience.item.category|get_category_class }} right-experience-item card-shadow">
+                    <h3 class="experience-item-role">{{ experience.item.role }}</h6>
+                    <h6 class="experience-item-title">{{ experience.item.title }}</h3>
+                </div>
+                {% endfor %}
             </div>
         </div>
         {% else %}
