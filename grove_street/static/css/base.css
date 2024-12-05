@@ -566,6 +566,7 @@ label {
 }
 
 .expertise-item-content-row-title {
+    font-style: bold;
     flex: 1;
 }
 

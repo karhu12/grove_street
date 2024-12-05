@@ -47,7 +47,7 @@ def about(request: HttpRequest):
         experience_range = None
         end_year = None
 
-    expertise_items_query = ExpertiseItem.objects.all()
+    expertise_items_query = ExpertiseItem.objects.order_by("-experience_months")
 
     categorized_expertise_items = {}
     if expertise_items_query:
