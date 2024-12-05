@@ -2,7 +2,8 @@ from datetime import datetime, timezone
 
 from django.test import TestCase
 
-from test_utils import create_experience_item
+from test_utils import create_experience_item, create_expertise_item
+from about.templatetags.about_extras import user_friendly_months
 
 
 class AboutPageTestCase(TestCase):
@@ -19,6 +20,10 @@ class AboutPageTestCase(TestCase):
         Experience items are created based on start and end date.
         They should be at specific top pixel position on their relative container with specific height.
         """
+        request = self.client.get("/about/")
+
+        self.assertContains(request, "<p>No experience items available.</p>", 1)
+
         test_content = [
             # December is year marker and month marker, should be 50px tall and at the top (as latest year).
             (
@@ -61,7 +66,6 @@ class AboutPageTestCase(TestCase):
                 1610,
                 50,
             ),
-
         ]
 
         for item in test_content:
@@ -69,9 +73,57 @@ class AboutPageTestCase(TestCase):
 
         request = self.client.get("/about/")
         for item in test_content:
-            self.assertContains(request, f"<h1 class=\"experience-year-highlight-text\">{item[0].year}</h1>", 1)
-            self.assertContains(request, f"<h1 class=\"experience-year-highlight-text\">{item[1].year}</h1>", 1)
-            self.assertContains(request, f"<div style=\"top: {item[2]}px; height: {item[3]}px\" class=\"work-experience-item card-shadow\">", 1)
+            self.assertContains(
+                request,
+                f'<h1 class="experience-year-highlight-text">{item[0].year}</h1>',
+                1,
+            )
+            self.assertContains(
+                request,
+                f'<h1 class="experience-year-highlight-text">{item[1].year}</h1>',
+                1,
+            )
+            self.assertContains(
+                request,
+                f'<div style="top: {item[2]}px; height: {item[3]}px" class="work-experience-item card-shadow">',
+                1,
+            )
 
         oldest_year = test_content[-1][0].year
-        self.assertNotContains(request, f"<h1 class=\"experience-year-highlight-text\">{oldest_year - 1}</h1>")
+        self.assertNotContains(
+            request,
+            f'<h1 class="experience-year-highlight-text">{oldest_year - 1}</h1>',
+        )
+
+    def test_that_expertise_items_work(self):
+        """Test that expertise items are loaded as expected."""
+        request = self.client.get("/about/")
+
+        self.assertContains(request, "<p>No expertise items available.</p>", 1)
+
+        item = create_expertise_item(title="Title 1", category="One", experience_months=1)
+        item_2 = create_expertise_item(title="Title 2", category="Two", experience_months=2)
+
+        request = self.client.get("/about/")
+
+        self.assertContains(request, '<div class="expertise-item-content-row">', 2)
+        self.assertContains(request, f"<p>{item.category}</p>", 1)
+        self.assertContains(request, f"<p>{item_2.category}</p>", 1)
+        self.assertContains(
+            request, f'<p class="expertise-item-content-row-title">{item.title}</p>', 1
+        )
+        self.assertContains(
+            request, f'<p class="expertise-item-content-row-title">{item_2.title}</p>', 1
+        )
+        item_months = user_friendly_months(item.experience_months)
+        item_2_months = user_friendly_months(item_2.experience_months)
+        self.assertContains(
+            request,
+            f'<p class="expertise-item-content-row-experience">{item_months}</p>',
+            1,
+        )
+        self.assertContains(
+            request,
+            f'<p class="expertise-item-content-row-experience">{item_2_months}</p>',
+            1,
+        )

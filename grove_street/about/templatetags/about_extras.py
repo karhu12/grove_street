@@ -23,6 +23,6 @@ def user_friendly_months(months: int) -> str:
         String representation of the months in clear format.
     """
     if months < 12:
-        return f"{months} month{"s" if months > 1 else ""}"
+        return f"{months} Month{"s" if months > 1 else ""}"
     years = int(months // 12)
-    return f"{years} year{"s" if years > 1 else ""}"
+    return f"{years} Year{"s" if years > 1 else ""}"

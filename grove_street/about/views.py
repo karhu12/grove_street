@@ -40,7 +40,7 @@ def about(request: HttpRequest):
     expertise_items_query = ExpertiseItem.objects.all()
 
     categorized_expertise_items = {}
-    if experience_items_query:
+    if expertise_items_query:
         for item in expertise_items_query:
             if item.category not in categorized_expertise_items:
                 categorized_expertise_items[item.category] = []
