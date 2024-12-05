@@ -87,16 +87,21 @@ class AboutPageTestCase(TestCase):
 
         request = self.client.get("/about/")
         for item in test_content:
+            is_oldest = test_content.index(item) == len(test_content) - 1
+
+            start_year = item[0].year + 1 if is_oldest else item[0].year
+            end_year = item[1].year + 1 if is_oldest else item[1].year
             self.assertContains(
                 request,
-                f'<h1 class="experience-year-highlight-text">{item[0].year}</h1>',
+                f'<h1 class="experience-year-highlight-text">{start_year}</h1>',
                 1,
             )
             self.assertContains(
                 request,
-                f'<h1 class="experience-year-highlight-text">{item[1].year}</h1>',
+                f'<h1 class="experience-year-highlight-text">{end_year}</h1>',
                 1,
             )
+
             if item[4] == "Work":
                 self.assertContains(
                     request,

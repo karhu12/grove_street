@@ -36,12 +36,13 @@ def about(request: HttpRequest):
 
             if item.category not in experience_item_categories:
                 experience_item_categories.append(item.category)
+
         if latest_year == oldest_date.year:
-            experience_range = range(latest_year, latest_year - 1, -1)
+            experience_range = range(latest_year + 1, latest_year, -1)
         elif oldest_date.month == Month.DECEMBER.value:
-            experience_range = range(latest_year, oldest_date.year, -1)
+            experience_range = range(latest_year + 1, oldest_date.year + 1, -1)
         else:
-            experience_range = range(latest_year, oldest_date.year - 1, -1)
+            experience_range = range(latest_year + 1, oldest_date.year, -1)
         end_year = experience_range[-1] - 1
     else:
         experience_range = None
