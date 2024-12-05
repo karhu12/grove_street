@@ -317,6 +317,7 @@ class BlogEditViewTestCase(TestCase):
             "This field is required.",
         )
 
+
 class BlogPublishViewTestCase(TestCase):
     """Test that '/blog/posts/publish/' view works as intended."""
 

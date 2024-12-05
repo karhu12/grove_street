@@ -1,5 +1,3 @@
-
-
 from typing import Optional
 
 from django.db import models
@@ -25,10 +23,10 @@ class BlogPost(models.Model):
 
         constraints = [
             models.CheckConstraint(
-                check=(~models.Q(title="")), name="blog_post_title_populated"
+                condition=(~models.Q(title="")), name="blog_post_title_populated"
             ),
             models.CheckConstraint(
-                check=(~models.Q(content="")), name="blog_post_content_populated"
+                condition=(~models.Q(content="")), name="blog_post_content_populated"
             ),
         ]
 
@@ -65,7 +63,7 @@ class BlogPostComment(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=(~models.Q(content="")),
+                condition=(~models.Q(content="")),
                 name="blog_post_comment_content_populated",
             ),
         ]

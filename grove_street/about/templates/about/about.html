@@ -1,5 +1,183 @@
 {% extends "base.html" %}
 {% load static %}
+{% load about_extras %}
 
 {% block content %}
+<div class="about-page">
+    <div class="about-page-description">
+        <div class="about-page-description-left">
+            <div class="about-page-description-headers">
+                <h1>Riku Kaipainen</h1>
+                <h2>Software Engineer</h2>
+            </div>
+            <div class="round-icon-container card-shadow">
+                <img class="round-img-icon" src="{% static 'img/portrait.png' %}" alt="Portrait picture of me."/>
+            </div>
+            <div class="about-page-description-details">
+                <h4>Phone</h4>
+                <p>+358440966080</p>
+                <h4>Email</h4>
+                <p>riku.kaipainen@gmail.com</p>
+                <h4>Address</h4>
+                <p>Joulumerkintie 6 A3, 90150, Oulu</p>
+                <h4>GitHub</h4>
+                <p><a href="https://github.com/karhu12" target="_blank">https://github.com/karhu12</a></p>
+                <h4>LinkedIn</h4>
+                <p><a href="https://www.linkedin.com/in/riku-kaipainen/" target="_blank">https://www.linkedin.com/in/riku-kaipainen/</a></p>
+            </div>
+        </div>
+        <div class="about-page-description-right">
+            <div class="about-page-description-content">
+                <h1>Description</h1>
+                <p>
+                    I am an experienced software developer with a strong background in frontend and
+                    backend development using Python. I have developed and designed user interfaces
+                    using PyQt and QML, implemented business logic and other backend logic,
+                    integrated measuring instruments and other devices with the software that was
+                    being developed. I have worked in tight collaboration with clients where I have
+                    been a part of setting up measurement systems, solving problems and giving
+                    software training for the said systems.
+                </p>
+                <p>
+                    I am an able programmer who can adapt quickly to new technologies. I am most
+                    confident in my skills with the Python programming language, as I have 5 years
+                    of work experience from it in my previous position. I have also used JavaScript
+                    with QML and C with embedded systems in my work. In terms of advancing my
+                    professional skills, I am keen to learn more about new technologies that
+                    I don’t have experience with prior.
+                </p>
+                <p>
+                    I am a motivated and extremely enthusiastic team player that is easy to approach with
+                    any matter. I am a rigorous worker and I always fully focus on the task at hand to
+                    achieve the best result. However, I am also a relaxed and cheerful person. I have
+                    worked both at the office and remotely, and I view hybrid work in a positive light.
+                    I have excellent written and spoken English language skills, and I use both Finnish
+                    and English as working languages.
+                </p>
+                <p>
+                    I have graduated as a bachelor of engineering from Oulu University of Applied
+                    Sciences with a specialization in software development. During my education I
+                    got to know basics from different software development branches, such as windows
+                    application development (C++, Qt), embedded software development
+                    (C, C++, Python, Arduino, Raspberry Pi, Nucleo), web development
+                    (PHP, HTML, CSS, JavaScript, Angular) databases (MySQL, NoSQL), backend development
+                    (Express REST APIs) and mobile development (Java, Android, Swift, iOS).
+                </p>
+                <p>
+                    In my work I have used common project management tools such as Jira, and I am a well
+                    versed user of Git. I also have some work experience with DevOps from using GitLab
+                    CI/CD and Jenkins.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="about-page-experience">
+        <h1>Experience</h1>
+        {% if work_experience_items or non_work_experience_items %}
+        <div class="experience-categories">
+            {% for category in experience_item_categories %}
+            <div class="experience-category">
+                <div class="{{ category|get_category_class }} experience-category-color-marker"></div>
+                <label class="no-margin">{{ category }}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="experience-container">
+            <div class="experience-items justify-right">
+                {% for experience in work_experience_items %}
+                <div style="top: {{ experience.placement.top }}px; height: {{ experience.placement.height }}px" class="{{ experience.item.category|get_category_class }} left-experience-item card-shadow">
+                    <h3 class="experience-item-role">{{ experience.item.role }}</h6>
+                    <h6 class="experience-item-title">{{ experience.item.title }}</h3>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="experience-timeline-container">
+                {% for year in experience_range %}
+                <div class="experience-year-highlight card-shadow">
+                    <div style="display: flex; flex-direction: column;">
+                        <h1 class="experience-year-highlight-text">{{ year }}</h1>
+                        <div class="experience-year-highlight-text">December</div>
+                    </div>
+                </div>
+                <div class="experience-year-timeline card-shadow">
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">November</div>
+                    </div>
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">October</div>
+                    </div>
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">September</div>
+                    </div>
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">August</div>
+                    </div>
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">July</div>
+                    </div>
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">June</div>
+                    </div>
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">May</div>
+                    </div>
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">April</div>
+                    </div>
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">March</div>
+                    </div>
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">February</div>
+                    </div>
+                    <div class="experience-month-highlight card-shadow">
+                        <div class="experience-month-highlight-text">January</div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="experience-year-highlight card-shadow">
+                    <div style="display: flex; flex-direction: column;">
+                        <h1 class="experience-year-highlight-text">{{ end_year }}</h1>
+                        <div class="experience-year-highlight-text">December</div>
+                    </div>
+                </div>
+            </div>
+            <div class="experience-items">
+                {% for experience in non_work_experience_items %}
+                <div style="top: {{ experience.placement.top }}px; height: {{ experience.placement.height }}px" class="{{ experience.item.category|get_category_class }} right-experience-item card-shadow">
+                    <h3 class="experience-item-role">{{ experience.item.role }}</h6>
+                    <h6 class="experience-item-title">{{ experience.item.title }}</h3>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p>No experience items available.</p>
+        {% endif%}
+    </div>
+    <div class="about-page-expertise">
+        <h1>Expertise</h1>
+        <div class="expertise-items">
+            {% if categorized_expertise_items %}
+            {% for category, items in categorized_expertise_items.items %}
+            <div class="expertise-item">
+                <div class="expertise-item-header">
+                    <p>{{ category }}</p>
+                </div>
+                <div class="expertise-item-content">
+                    {% for item in items %}
+                    <div class="expertise-item-content-row">
+                        <p class="expertise-item-content-row-title">{{ item.title}}</p>
+                        <p class="expertise-item-content-row-experience">{{ item.experience_months|user_friendly_months }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No expertise items available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

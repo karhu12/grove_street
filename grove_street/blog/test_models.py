@@ -1,8 +1,40 @@
+import pytest
+
 from django.test import TestCase
 from django.db.utils import IntegrityError
 from django.utils.timezone import now
 
 from test_utils import create_blog_post, create_test_user, create_blog_post_comment
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "parameter,expected_error",
+    [
+        ("user", IntegrityError),
+        ("title", IntegrityError),
+        ("content", IntegrityError),
+        ("published_date", IntegrityError),
+        ("edited_date", None),
+    ],
+)
+def test_creating_blog_post_without_parameter(
+    parameter: str, expected_error: Exception | None
+):
+    """Attempt to create an blog post without a given parameter."""
+    user = create_test_user()
+
+    params = {
+        "user": user
+    }
+
+    params[parameter] = None
+
+    if expected_error is None:
+        create_blog_post(**params)
+    else:
+        with pytest.raises(expected_error):
+            create_blog_post(**params)
 
 
 class BlogPostTestCase(TestCase):
@@ -13,25 +45,6 @@ class BlogPostTestCase(TestCase):
         user = create_test_user()
         blog_post = create_blog_post(user)
         self.assertEqual(blog_post.edited_date, None)
-
-    def test_creating_without_user(self):
-        """Attempt to create a blog post without a user."""
-        self.assertRaises(IntegrityError, create_blog_post, user=None)
-
-    def test_creating_without_title(self):
-        """Attempt to create a blog post without a title."""
-        user = create_test_user()
-        self.assertRaises(IntegrityError, create_blog_post, user, title=None)
-
-    def test_creating_without_content(self):
-        """Attempt to create a blog post without content."""
-        user = create_test_user()
-        self.assertRaises(IntegrityError, create_blog_post, user, content=None)
-
-    def test_creating_without_published_date(self):
-        """Attempt to create a blog post without published date."""
-        user = create_test_user()
-        self.assertRaises(IntegrityError, create_blog_post, user, published_date=None)
 
     def test_modifying_edited_date(self):
         """Attempt to create a blog post and modify edited date after creation."""
@@ -45,6 +58,38 @@ class BlogPostTestCase(TestCase):
         self.assertEqual(blog_post.edited_date, edited_date)
 
 
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "parameter,expected_error",
+    [
+        ("user", IntegrityError),
+        ("blog_post", IntegrityError),
+        ("content", IntegrityError),
+        ("created_date", IntegrityError),
+        ("edited_date", None),
+    ],
+)
+def test_creating_blog_post_comment_without_parameter(
+    parameter: str, expected_error: Exception | None
+):
+    """Attempt to create an blog post comment without a given parameter."""
+    user = create_test_user()
+    blog_post = create_blog_post(user)
+
+    params = {
+        "user": user,
+        "blog_post": blog_post,
+    }
+
+    params[parameter] = None
+
+    if expected_error is None:
+        create_blog_post_comment(**params)
+    else:
+        with pytest.raises(expected_error):
+            create_blog_post_comment(**params)
+
+
 class BlogPostCommentTestCase(TestCase):
     """Tests related to BlogPostComment model."""
 
@@ -54,46 +99,3 @@ class BlogPostCommentTestCase(TestCase):
         blog_post = create_blog_post(user)
         comment = create_blog_post_comment(blog_post, user)
         self.assertEqual(comment.edited_date, None)
-
-    def test_creating_without_user(self):
-        """Attempt to create a blog post comment without a user."""
-        user = create_test_user()
-        blog_post = create_blog_post(user)
-        self.assertRaises(IntegrityError, create_blog_post_comment, blog_post, None)
-
-    def test_creating_without_blog_post(self):
-        """Attempt to create a blog post comment without a blog post."""
-        user = create_test_user()
-        self.assertRaises(IntegrityError, create_blog_post_comment, None, user)
-
-    def test_creating_without_content(self):
-        """Attempt to create a blog post comment without content."""
-        user = create_test_user()
-        blog_post = create_blog_post(user)
-        self.assertRaises(
-            IntegrityError,
-            create_blog_post_comment,
-            blog_post,
-            user,
-            content=None,
-        )
-
-    def test_creating_without_created_date(self):
-        """Attempt to create a blog post comment without created date."""
-        user = create_test_user()
-        blog_post = create_blog_post(user)
-        self.assertRaises(
-            IntegrityError, create_blog_post_comment, blog_post, user, created_date=None
-        )
-
-    def test_modifying_edited_date(self):
-        """Attempt to create a blog post comment and modify edited date after creation."""
-        user = create_test_user()
-        blog_post = create_blog_post(user)
-        comment = create_blog_post_comment(blog_post, user)
-        self.assertEqual(comment.edited_date, None)
-
-        edited_date = now()
-        comment.edited_date = edited_date
-        comment.save()
-        self.assertEqual(comment.edited_date, edited_date)
